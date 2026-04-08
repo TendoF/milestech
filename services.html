@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Services — Miles Tech</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--cream:#f5f0eb;--warm:#e8ddd4;--dark:#1a1714;--mid:#4a4440;--accent:#c9a87a;--text:#2d2926;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9000;opacity:0.6;}
+
+/* ─── NAV ─────────────────────────────────────────── */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:400;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:22px 48px;
+  background:rgba(245,240,235,0.95);
+  backdrop-filter:blur(14px);
+}
+.nav-logo{
+  font-family:'DM Sans',sans-serif;font-size:15px;font-weight:400;
+  color:var(--dark);text-decoration:none;letter-spacing:0.02em;
+}
+.nav-logo span{font-weight:300;color:var(--mid);}
+
+/* Desktop center links */
+.nav-desktop{
+  position:absolute;left:50%;transform:translateX(-50%);
+  display:flex;gap:36px;align-items:center;
+}
+.nav-desktop a{
+  font-size:13px;color:var(--dark);text-decoration:none;
+  letter-spacing:0.04em;transition:opacity 0.3s;
+}
+.nav-desktop a:hover{opacity:0.5;}
+
+/* ─── MENU BUTTON ─────────────────────────────────── */
+.menu-btn{
+  display:none;
+  align-items:center;gap:9px;
+  background:none;border:none;cursor:pointer;
+  padding:6px 0;
+}
+.menu-btn-label{
+  font-family:'DM Sans',sans-serif;font-size:11px;
+  letter-spacing:0.18em;text-transform:uppercase;
+  color:rgba(26,23,20,0.5);transition:color 0.3s;
+}
+.menu-btn:hover .menu-btn-label{color:var(--dark);}
+.menu-btn-icon{
+  width:36px;height:36px;border-radius:50%;
+  border:1px solid rgba(26,23,20,0.2);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;
+  transition:border-color 0.3s,background 0.3s;
+  flex-shrink:0;
+}
+.menu-btn:hover .menu-btn-icon{border-color:var(--accent);background:rgba(201,168,122,0.08);}
+.menu-btn-icon span{
+  display:block;width:14px;height:1.5px;background:var(--dark);border-radius:2px;
+  transition:all 0.35s cubic-bezier(0.4,0,0.2,1);transform-origin:center;
+}
+.menu-btn.open .menu-btn-icon{border-color:rgba(26,23,20,0.35);background:rgba(26,23,20,0.06);}
+.menu-btn.open .menu-btn-icon span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+.menu-btn.open .menu-btn-icon span:nth-child(2){opacity:0;transform:scaleX(0);}
+.menu-btn.open .menu-btn-icon span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+
+/* ─── RIGHT-SIDE DRAWER ───────────────────────────── */
+.drawer-backdrop{
+  position:fixed;inset:0;z-index:480;
+  background:rgba(0,0,0,0);
+  pointer-events:none;
+  transition:background 0.4s ease;
+}
+.drawer-backdrop.open{
+  background:rgba(0,0,0,0.55);
+  pointer-events:all;
+}
+.drawer{
+  position:fixed;top:0;right:0;bottom:0;z-index:490;
+  width:min(320px,85vw);
+  background:var(--dark);
+  display:flex;flex-direction:column;
+  transform:translateX(100%);
+  transition:transform 0.42s cubic-bezier(0.4,0,0.2,1);
+  overflow:hidden;
+}
+.drawer.open{transform:translateX(0);}
+.drawer-top{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:22px 28px;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  flex-shrink:0;
+}
+.drawer-brand{
+  font-family:'DM Sans',sans-serif;font-size:14px;font-weight:300;
+  color:rgba(255,255,255,0.5);letter-spacing:0.04em;
+}
+.drawer-close{
+  width:34px;height:34px;border-radius:50%;
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all 0.3s;color:rgba(255,255,255,0.5);font-size:14px;
+}
+.drawer-close:hover{background:rgba(255,255,255,0.12);color:#fff;}
+.drawer-links{
+  display:flex;flex-direction:column;
+  padding:40px 28px 0;
+  flex:1;
+}
+.drawer-link{
+  font-family:'Cormorant Garamond',serif;
+  font-size:40px;font-weight:300;
+  color:rgba(255,255,255,0.18);
+  text-decoration:none;
+  padding:14px 0;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  display:flex;align-items:center;justify-content:space-between;
+  transition:color 0.3s,padding-left 0.3s;
+  opacity:0;transform:translateX(20px);
+}
+.drawer.open .drawer-link{
+  color:rgba(255,255,255,0.8);
+  opacity:1;transform:translateX(0);
+}
+.drawer.open .drawer-link:nth-child(1){transition:color 0.3s,padding-left 0.3s,opacity 0.4s 0.08s,transform 0.4s 0.08s;}
+.drawer.open .drawer-link:nth-child(2){transition:color 0.3s,padding-left 0.3s,opacity 0.4s 0.15s,transform 0.4s 0.15s;}
+.drawer.open .drawer-link:nth-child(3){transition:color 0.3s,padding-left 0.3s,opacity 0.4s 0.22s,transform 0.4s 0.22s;}
+.drawer.open .drawer-link:nth-child(4){transition:color 0.3s,padding-left 0.3s,opacity 0.4s 0.29s,transform 0.4s 0.29s;}
+.drawer-link:hover{color:#fff;padding-left:6px;}
+.drawer-link i{font-size:14px;color:rgba(255,255,255,0.15);transition:color 0.3s,transform 0.3s;}
+.drawer-link:hover i{color:var(--accent);transform:translateX(3px);}
+.drawer-contact{
+  padding:28px;border-top:1px solid rgba(255,255,255,0.06);
+  display:flex;flex-direction:column;gap:14px;
+  opacity:0;transition:opacity 0.4s 0.35s;
+}
+.drawer.open .drawer-contact{opacity:1;}
+.drawer-contact-item{
+  display:flex;align-items:center;gap:12px;
+  text-decoration:none;
+  color:rgba(255,255,255,0.35);font-size:13px;font-weight:300;
+  transition:color 0.3s;
+}
+.drawer-contact-item:hover{color:rgba(255,255,255,0.75);}
+.drawer-contact-item i{color:var(--accent);font-size:14px;width:16px;text-align:center;}
+.drawer-wa-btn{
+  margin-top:4px;
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  background:var(--accent);color:#fff;border-radius:100px;
+  padding:12px 20px;font-size:13px;font-weight:400;text-decoration:none;
+  transition:background 0.3s;
+}
+.drawer-wa-btn:hover{background:#b8965e;}
+/* ─── END NAV ─────────────────────────────────────── */
+
+/* PAGE HERO */
+.page-hero{padding:160px 48px 100px;background:linear-gradient(135deg,#e8ddd4,#d4c5b5,#c5b8ab);position:relative;overflow:hidden;}
+.arch{position:absolute;border-radius:50% 50% 0 0;border:1px solid rgba(255,255,255,0.3);}
+.arch-1{width:260px;height:320px;right:5%;bottom:0;background:linear-gradient(180deg,rgba(255,255,255,0.1),transparent);}
+.arch-2{width:180px;height:220px;right:12%;bottom:0;background:rgba(255,255,255,0.06);}
+.page-hero-content{position:relative;z-index:2;max-width:700px;}
+.page-eyebrow{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);margin-bottom:20px;}
+.page-title{font-family:'Cormorant Garamond',serif;font-size:clamp(52px,7vw,96px);font-weight:300;line-height:0.95;color:var(--dark);margin-bottom:28px;}
+.page-title em{font-style:italic;}
+.page-subtitle{font-size:15px;font-weight:300;color:var(--mid);line-height:1.8;max-width:480px;}
+
+/* SERVICE SECTIONS */
+.svc-section{padding:0;}
+.svc-inner{display:grid;grid-template-columns:1fr 1fr;align-items:stretch;}
+.svc-inner.flip{direction:rtl;}
+.svc-inner.flip>*{direction:ltr;}
+.svc-content{padding:80px 64px;display:flex;flex-direction:column;justify-content:center;}
+.svc-dark-bg .svc-content{background:var(--dark);}
+.svc-light-bg .svc-content{background:var(--cream);color:var(--text);}
+.svc-warm-bg .svc-content{background:var(--warm);color:var(--text);}
+.svc-img-side{position:relative;overflow:hidden;min-height:520px;}
+.svc-img-side img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;transition:transform 0.9s cubic-bezier(0.4,0,0.2,1),filter 0.6s;filter:brightness(0.7) saturate(0.8);}
+.svc-img-side:hover img{transform:scale(1.05);filter:brightness(0.5) saturate(0.7);}
+.svc-img-badge{position:absolute;bottom:32px;left:32px;background:rgba(26,23,20,0.8);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.12);padding:16px 20px;border-radius:4px;}
+.svc-img-badge-label{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;}
+.svc-img-badge-val{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;font-style:italic;color:#fff;}
+
+.svc-label{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);margin-bottom:12px;}
+.svc-dark-bg .svc-label{color:rgba(255,255,255,0.4);}
+.svc-title{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,3.5vw,48px);font-weight:300;line-height:1.1;margin-bottom:20px;}
+.svc-title em{font-style:italic;}
+.svc-dark-bg .svc-title{color:#fff;}
+.svc-light-bg .svc-title,.svc-warm-bg .svc-title{color:var(--dark);}
+.svc-desc{font-size:14px;font-weight:300;line-height:1.85;color:var(--mid);margin-bottom:28px;}
+.svc-dark-bg .svc-desc{color:rgba(255,255,255,0.6);}
+.svc-list{list-style:none;margin-bottom:36px;}
+.svc-list li{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid rgba(0,0,0,0.07);font-size:13px;font-weight:300;}
+.svc-dark-bg .svc-list li{border-color:rgba(255,255,255,0.1);color:rgba(255,255,255,0.75);}
+.svc-light-bg .svc-list li,.svc-warm-bg .svc-list li{color:var(--text);border-color:rgba(0,0,0,0.08);}
+.svc-list li i{color:var(--accent);font-size:13px;margin-top:2px;flex-shrink:0;}
+.svc-cta{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;background:var(--dark);color:#fff;border-radius:100px;font-size:13px;text-decoration:none;transition:all 0.3s;align-self:flex-start;}
+.svc-cta:hover{background:var(--accent);}
+.svc-dark-bg .svc-cta{background:var(--accent);}
+.svc-dark-bg .svc-cta:hover{background:var(--cream);color:var(--dark);}
+.svc-price-pill{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;border-radius:100px;font-size:12px;color:var(--accent);border:1px solid rgba(201,168,122,0.35);background:rgba(201,168,122,0.08);margin-bottom:20px;align-self:flex-start;}
+
+/* BETWEEN-SECTIONS IMAGE BANNERS */
+.svc-banner{position:relative;overflow:hidden;height:400px;}
+.svc-banner img{width:100%;height:100%;object-fit:cover;transition:transform 1s cubic-bezier(0.4,0,0.2,1),filter 0.7s;filter:brightness(0.38) saturate(0.7);}
+.svc-banner:hover img{transform:scale(1.04);filter:brightness(0.28);}
+.svc-banner-content{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px;}
+.svc-banner-tag{font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;}
+.svc-banner-title{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,5vw,64px);font-weight:300;color:#fff;line-height:1;margin-bottom:24px;}
+.svc-banner-title em{font-style:italic;}
+.svc-banner-btn{display:inline-flex;align-items:center;gap:10px;padding:13px 30px;border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:100px;font-size:13px;text-decoration:none;background:rgba(255,255,255,0.06);backdrop-filter:blur(8px);transition:all 0.35s;}
+.svc-banner:hover .svc-banner-btn{background:var(--accent);border-color:var(--accent);}
+
+
+/* Fix white text visibility on dark background sections */
+.svc-dark-bg .svc-title,
+.svc-dark-bg .svc-desc,
+.svc-dark-bg .svc-list li {
+    color: #2d2926 !important;
+}
+
+/* FAQ */
+.faq{background:var(--cream);padding:120px 48px;}
+.faq-inner{max-width:800px;margin:0 auto;}
+.faq-header{text-align:center;margin-bottom:64px;}
+.faq-label{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);margin-bottom:12px;}
+.faq-title{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,4vw,52px);font-weight:300;}
+.faq-title em{font-style:italic;}
+.faq-item{border-bottom:1px solid rgba(0,0,0,0.1);padding:24px 0;cursor:pointer;}
+.faq-q{display:flex;justify-content:space-between;align-items:center;font-size:15px;font-weight:400;}
+.faq-q i{transition:transform 0.3s;font-size:12px;color:var(--mid);}
+.faq-a{font-size:13px;font-weight:300;line-height:1.8;color:var(--mid);max-height:0;overflow:hidden;transition:max-height 0.4s ease,padding 0.3s;}
+.faq-item.open .faq-a{max-height:200px;padding-top:16px;}
+.faq-item.open .faq-q i{transform:rotate(45deg);}
+
+/* BOOKING STRIP */
+.booking-strip{background:var(--dark);padding:100px 48px;text-align:center;}
+.booking-strip-title{font-family:'Cormorant Garamond',serif;font-size:clamp(40px,5vw,72px);font-weight:300;color:#fff;margin-bottom:16px;line-height:1.1;}
+.booking-strip-title em{font-style:italic;}
+.booking-strip-sub{font-size:14px;color:rgba(255,255,255,0.5);margin-bottom:48px;}
+.booking-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+.btn-accent{display:inline-flex;align-items:center;gap:10px;padding:16px 36px;background:var(--accent);color:#fff;border-radius:100px;font-size:14px;text-decoration:none;transition:all 0.3s;}
+.btn-accent:hover{background:#b8965e;}
+.btn-outline-w{display:inline-flex;align-items:center;gap:10px;padding:16px 36px;border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:100px;font-size:14px;text-decoration:none;transition:all 0.3s;}
+.btn-outline-w:hover{background:rgba(255,255,255,0.1);}
+
+footer{background:var(--dark);padding:60px 48px 36px;}
+.footer-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:48px;}
+.footer-logo{font-family:'DM Sans',sans-serif;font-size:22px;font-weight:300;color:#fff;}
+.footer-logo span{font-weight:400;}
+.footer-links{display:flex;gap:32px;flex-wrap:wrap;}
+.footer-links a{font-size:13px;color:rgba(255,255,255,0.4);text-decoration:none;transition:color 0.3s;}
+.footer-links a:hover{color:#fff;}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.08);padding-top:24px;display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,0.3);}
+
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 0.8s ease,transform 0.8s ease;}
+.reveal.visible{opacity:1;transform:none;}
+.reveal-s{opacity:0;transform:scale(0.94);transition:opacity 0.8s ease,transform 0.8s ease;}
+.reveal-s.visible{opacity:1;transform:scale(1);}
+
+@media(max-width:900px){
+  .nav{padding:20px 24px;}
+  .nav-desktop{display:none;}
+  .menu-btn{display:flex;}
+
+  .page-hero{padding:120px 24px 80px;}
+  .svc-inner{grid-template-columns:1fr;direction:ltr!important;}
+  .svc-content{padding:56px 28px;}
+  .svc-img-side{min-height:280px;}
+  .svc-banner{height:280px;}
+  .faq{padding:80px 24px;}
+  .booking-strip{padding:80px 24px;}
+  .footer-top{flex-direction:column;gap:24px;}
+  .footer-bottom{flex-direction:column;gap:8px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ─── DRAWER BACKDROP ─── -->
+<div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
+
+<!-- ─── RIGHT-SIDE DRAWER ─── -->
+<div class="drawer" id="drawer">
+  <div class="drawer-top">
+    <span class="drawer-brand">miles<strong style="font-weight:400;color:rgba(255,255,255,0.7)">tech</strong></span>
+    <button class="drawer-close" onclick="closeDrawer()" aria-label="Close menu">
+      <i class="fa fa-xmark"></i>
+    </button>
+  </div>
+  <div class="drawer-links">
+    <a href="index.html" class="drawer-link" onclick="closeDrawer()">Home <i class="fa fa-arrow-right"></i></a>
+    <a href="services.html" class="drawer-link" onclick="closeDrawer()">Services <i class="fa fa-arrow-right"></i></a>
+    <a href="projects.html" class="drawer-link" onclick="closeDrawer()">Projects <i class="fa fa-arrow-right"></i></a>
+    <a href="contact.html" class="drawer-link" onclick="closeDrawer()">Contact <i class="fa fa-arrow-right"></i></a>
+  </div>
+  <div class="drawer-contact">
+    <a href="tel:+263779405017" class="drawer-contact-item">
+      <i class="fa fa-phone"></i> +263 77 940 5017
+    </a>
+    <a href="mailto:matizawayne@gmail.com" class="drawer-contact-item">
+      <i class="fa fa-envelope"></i> matizawayne@gmail.com
+    </a>
+    <a href="https://wa.me/263779405017" class="drawer-wa-btn">
+      <i class="fab fa-whatsapp"></i> WhatsApp us
+    </a>
+  </div>
+</div>
+
+<!-- ─── NAV ─── -->
+<nav class="nav">
+  <a href="index.html" class="nav-logo">miles<span>tech</span></a>
+  <div class="nav-desktop">
+    <a href="index.html">Home</a>
+    <a href="services.html">Services</a>
+    <a href="projects.html">Projects</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <button class="menu-btn" id="menuBtn" onclick="toggleDrawer()" aria-label="Open menu">
+    <span class="menu-btn-label">Menu</span>
+    <div class="menu-btn-icon">
+      <span></span><span></span><span></span>
+    </div>
+  </button>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="arch arch-1"></div><div class="arch arch-2"></div>
+  <div class="page-hero-content">
+    <p class="page-eyebrow">What we offer</p>
+    <h1 class="page-title">Our <em>services</em></h1>
+    <p class="page-subtitle">Six specialist services. One reliable team. Real results delivered across Zimbabwe and beyond.</p>
+  </div>
+</div>
+
+<!-- SERVICE 1: IT SUPPORT -->
+<div class="svc-section" id="it">
+  <div class="svc-inner">
+    <div class="svc-img-side reveal-s">
+      <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=900&q=80&fit=crop" alt="IT support circuit board technology" loading="lazy">
+      <div class="svc-img-badge">
+        <div class="svc-img-badge-label">Response time</div>
+        <div class="svc-img-badge-val">Under 2 hours</div>
+      </div>
+    </div>
+    <div class="svc-content svc-light-bg reveal">
+      <div class="svc-price-pill"><i class="fa fa-tag"></i> From $15 per session</div>
+      <div class="svc-label">Service 01</div>
+      <h2 class="svc-title">IT Issues <em>& Support</em></h2>
+      <p class="svc-desc">Tech problems don't wait for convenient moments. We handle everything from crashed computers to full network setups — fast, professionally, at fair rates.</p>
+      <ul class="svc-list">
+        <li><i class="fa fa-check-circle"></i> Virus & malware removal</li>
+        <li><i class="fa fa-check-circle"></i> Software installation & configuration</li>
+        <li><i class="fa fa-check-circle"></i> Network setup & troubleshooting</li>
+        <li><i class="fa fa-check-circle"></i> Data recovery & backup</li>
+        <li><i class="fa fa-check-circle"></i> Remote desktop support</li>
+        <li><i class="fa fa-check-circle"></i> Hardware diagnosis & advice</li>
+        <li><i class="fa fa-check-circle"></i> Email & cloud setup</li>
+        <li><i class="fa fa-check-circle"></i> Business device configuration</li>
+      </ul>
+      <a href="contact.html" class="svc-cta">Book IT support <i class="fa fa-arrow-right"></i></a>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICE 2: MARKETING -->
+<div class="svc-section" id="marketing">
+  <div class="svc-inner flip">
+    <div class="svc-img-side reveal-s">
+      <img src="https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=900&q=80&fit=crop" alt="Digital marketing data analytics" loading="lazy">
+      <div class="svc-img-badge">
+        <div class="svc-img-badge-label">Average reach increase</div>
+        <div class="svc-img-badge-val">3× in 90 days</div>
+      </div>
+    </div>
+    <div class="svc-content svc-warm-bg reveal">
+      <div class="svc-price-pill"><i class="fa fa-tag"></i> From $30 per campaign</div>
+      <div class="svc-label">Service 02</div>
+      <h2 class="svc-title">Marketing <em>& Digital Growth</em></h2>
+      <p class="svc-desc">We design and execute marketing strategies that put your business in front of the right people. From Facebook ads to full brand campaigns — we drive measurable results.</p>
+      <ul class="svc-list">
+        <li><i class="fa fa-check-circle"></i> Facebook & Instagram ad campaigns</li>
+        <li><i class="fa fa-check-circle"></i> Google Ads setup & management</li>
+        <li><i class="fa fa-check-circle"></i> Content strategy & planning</li>
+        <li><i class="fa fa-check-circle"></i> Graphic design & branded content</li>
+        <li><i class="fa fa-check-circle"></i> WhatsApp marketing campaigns</li>
+        <li><i class="fa fa-check-circle"></i> Email marketing setup</li>
+        <li><i class="fa fa-check-circle"></i> Campaign performance reporting</li>
+        <li><i class="fa fa-check-circle"></i> Brand identity & positioning</li>
+      </ul>
+      <a href="contact.html" class="svc-cta">Start a campaign <i class="fa fa-arrow-right"></i></a>
+    </div>
+  </div>
+</div>
+
+<!-- BANNER -->
+<div class="svc-banner">
+  <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1600&q=80&fit=crop" alt="Professional office team" loading="lazy">
+  <div class="svc-banner-content">
+    <div class="svc-banner-tag">500+ clients helped — 98% satisfaction</div>
+    <h2 class="svc-banner-title">Problems solved,<br><em>results delivered</em></h2>
+    <a href="contact.html" class="svc-banner-btn">Get your free quote <i class="fa fa-arrow-right"></i></a>
+  </div>
+</div>
+
+<!-- SERVICE 3: ACCOUNT ACTIVATION -->
+<div class="svc-section" id="account">
+  <div class="svc-inner">
+    <div class="svc-img-side reveal-s">
+      <img src="https://images.unsplash.com/photo-1555421689-d68471e189f2?w=900&q=80&fit=crop" alt="Account login digital security" loading="lazy">
+      <div class="svc-img-badge">
+        <div class="svc-img-badge-label">Accounts restored</div>
+        <div class="svc-img-badge-val">300+ and counting</div>
+      </div>
+    </div>
+    <div class="svc-content svc-dark-bg reveal">
+      <div class="svc-price-pill"><i class="fa fa-tag"></i> From $20 per account</div>
+      <div class="svc-label">Service 03</div>
+      <h2 class="svc-title">Account <em>Activation & Restore</em></h2>
+      <p class="svc-desc">Locked out? Suspended without warning? We specialise in navigating platform policies to restore and activate your accounts — social media, email, and business profiles.</p>
+      <ul class="svc-list">
+        <li><i class="fa fa-check-circle"></i> Facebook account activation & appeals</li>
+        <li><i class="fa fa-check-circle"></i> Instagram suspended account restoration</li>
+        <li><i class="fa fa-check-circle"></i> TikTok account recovery</li>
+        <li><i class="fa fa-check-circle"></i> Google & Gmail account access</li>
+        <li><i class="fa fa-check-circle"></i> WhatsApp Business reinstatement</li>
+        <li><i class="fa fa-check-circle"></i> Twitter/X account appeals</li>
+        <li><i class="fa fa-check-circle"></i> Business Manager access restoration</li>
+        <li><i class="fa fa-check-circle"></i> Ad account unbanning</li>
+      </ul>
+      <a href="contact.html" class="svc-cta">Restore my account <i class="fa fa-arrow-right"></i></a>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICE 4: HACKED ACCOUNTS -->
+<div class="svc-section" id="hacked">
+  <div class="svc-inner flip">
+    <div class="svc-img-side reveal-s">
+      <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=900&q=80&fit=crop" alt="Cybersecurity digital protection" loading="lazy">
+      <div class="svc-img-badge">
+        <div class="svc-img-badge-label">Emergency response</div>
+        <div class="svc-img-badge-val">Available 24/7</div>
+      </div>
+    </div>
+    <div class="svc-content svc-light-bg reveal">
+      <div class="svc-price-pill"><i class="fa fa-tag"></i> From $35 per case</div>
+      <div class="svc-label">Service 04</div>
+      <h2 class="svc-title">Hacked Account <em>Recovery</em></h2>
+      <p class="svc-desc">Had your account taken over? Email, phone and password all changed? We recover compromised accounts even in the most difficult cases — and secure them so it never happens again.</p>
+      <ul class="svc-list">
+        <li><i class="fa fa-check-circle"></i> Facebook & Instagram takeover recovery</li>
+        <li><i class="fa fa-check-circle"></i> Email account compromise recovery</li>
+        <li><i class="fa fa-check-circle"></i> Identity theft account restoration</li>
+        <li><i class="fa fa-check-circle"></i> Platform identity verification support</li>
+        <li><i class="fa fa-check-circle"></i> Security hardening post-recovery</li>
+        <li><i class="fa fa-check-circle"></i> Page admin removal (unauthorised)</li>
+        <li><i class="fa fa-check-circle"></i> Emergency 24-hour response</li>
+        <li><i class="fa fa-check-circle"></i> Full account security audit</li>
+      </ul>
+      <a href="contact.html" class="svc-cta">Emergency recovery <i class="fa fa-arrow-right"></i></a>
+    </div>
+  </div>
+</div>
+
+<!-- BANNER 2 -->
+<div class="svc-banner">
+  <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=1600&q=80&fit=crop" alt="Professional expert team member" loading="lazy">
+  <div class="svc-banner-content">
+    <div class="svc-banner-tag">Discreet — Confidential — Professional</div>
+    <h2 class="svc-banner-title">Your digital life,<br><em>in safe hands</em></h2>
+    <a href="contact.html" class="svc-banner-btn">Talk to us now <i class="fa fa-arrow-right"></i></a>
+  </div>
+</div>
+
+<!-- SERVICE 5: PAGE MANAGEMENT -->
+<div class="svc-section" id="pages">
+  <div class="svc-inner">
+    <div class="svc-img-side reveal-s">
+      <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=900&q=80&fit=crop" alt="Social media page management" loading="lazy">
+      <div class="svc-img-badge">
+        <div class="svc-img-badge-label">Pages managed</div>
+        <div class="svc-img-badge-val">30+ active pages</div>
+      </div>
+    </div>
+    <div class="svc-content svc-dark-bg reveal">
+      <div class="svc-price-pill"><i class="fa fa-tag"></i> From $80 per month</div>
+      <div class="svc-label">Service 05</div>
+      <h2 class="svc-title">Online Page <em>Management</em></h2>
+      <p class="svc-desc">Running a business page is a full-time job. We take that off your plate — managing your presence, engaging your audience, and growing your brand consistently every day.</p>
+      <ul class="svc-list">
+        <li><i class="fa fa-check-circle"></i> Daily posting & content scheduling</li>
+        <li><i class="fa fa-check-circle"></i> Comment & DM response management</li>
+        <li><i class="fa fa-check-circle"></i> Brand voice & tone consistency</li>
+        <li><i class="fa fa-check-circle"></i> Hashtag research & optimisation</li>
+        <li><i class="fa fa-check-circle"></i> Stories & reels creation</li>
+        <li><i class="fa fa-check-circle"></i> Monthly analytics reporting</li>
+        <li><i class="fa fa-check-circle"></i> Competitor analysis</li>
+        <li><i class="fa fa-check-circle"></i> Community growth strategy</li>
+      </ul>
+      <a href="contact.html" class="svc-cta">Manage my pages <i class="fa fa-arrow-right"></i></a>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICE 6: FOLLOWERS -->
+<div class="svc-section" id="growth">
+  <div class="svc-inner flip">
+    <div class="svc-img-side reveal-s">
+      <img src="https://images.unsplash.com/photo-1559526324-593bc073d938?w=900&q=80&fit=crop" alt="Social media growth followers" loading="lazy">
+      <div class="svc-img-badge">
+        <div class="svc-img-badge-label">Followers delivered</div>
+        <div class="svc-img-badge-val">50,000+ to date</div>
+      </div>
+    </div>
+    <div class="svc-content svc-warm-bg reveal">
+      <div class="svc-price-pill"><i class="fa fa-tag"></i> From $10 per package</div>
+      <div class="svc-label">Service 06</div>
+      <h2 class="svc-title">Followers, Likes <em>& Engagement</em></h2>
+      <p class="svc-desc">Social proof matters. A strong follower count and engagement rate builds trust and credibility fast. We boost your numbers across all major platforms to accelerate your brand's momentum.</p>
+      <ul class="svc-list">
+        <li><i class="fa fa-check-circle"></i> Facebook page likes & followers</li>
+        <li><i class="fa fa-check-circle"></i> Instagram followers & post likes</li>
+        <li><i class="fa fa-check-circle"></i> TikTok followers & video views</li>
+        <li><i class="fa fa-check-circle"></i> YouTube views & subscribers</li>
+        <li><i class="fa fa-check-circle"></i> Twitter/X followers & retweets</li>
+        <li><i class="fa fa-check-circle"></i> WhatsApp channel subscribers</li>
+        <li><i class="fa fa-check-circle"></i> Google Business reviews</li>
+        <li><i class="fa fa-check-circle"></i> Custom packages for any target</li>
+      </ul>
+      <a href="contact.html" class="svc-cta">Boost my account <i class="fa fa-arrow-right"></i></a>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<section class="faq">
+  <div class="faq-inner">
+    <div class="faq-header reveal"><p class="faq-label">Got questions?</p><h2 class="faq-title">Frequently <em>asked</em></h2></div>
+    <div class="faq-item reveal" onclick="this.classList.toggle('open')"><div class="faq-q">How long does account recovery take? <i class="fa fa-plus"></i></div><div class="faq-a">Most account activations and restorations are completed within 24–48 hours. Complex hacked account cases may take 3–5 days. We'll give you a clear timeline upfront.</div></div>
+    <div class="faq-item reveal" onclick="this.classList.toggle('open')"><div class="faq-q">Is my information kept confidential? <i class="fa fa-plus"></i></div><div class="faq-a">Absolutely. We handle all client credentials and account details with strict confidentiality. We never store your passwords or share your information with third parties.</div></div>
+    <div class="faq-item reveal" onclick="this.classList.toggle('open')"><div class="faq-q">What if you can't recover my account? <i class="fa fa-plus"></i></div><div class="faq-a">We offer a satisfaction guarantee. If we cannot recover or restore your account after our process, we will not charge you. We'll be upfront about difficulty before starting.</div></div>
+    <div class="faq-item reveal" onclick="this.classList.toggle('open')"><div class="faq-q">Are the followers and likes real? <i class="fa fa-plus"></i></div><div class="faq-a">We provide high-quality engagement that appears natural and doesn't risk your account. We'll advise you on the best approach for your specific situation and goals.</div></div>
+    <div class="faq-item reveal" onclick="this.classList.toggle('open')"><div class="faq-q">Do you work with businesses outside Zimbabwe? <i class="fa fa-plus"></i></div><div class="faq-a">Yes! We work with clients across Africa and beyond. Our services are entirely remote-compatible. Payment can be arranged via mobile money, bank transfer, or other methods.</div></div>
+  </div>
+</section>
+
+<!-- BOOKING STRIP -->
+<div class="booking-strip">
+  <h2 class="booking-strip-title reveal">Ready to <em>get started?</em></h2>
+  <p class="booking-strip-sub reveal">Contact us now — we respond within the hour.</p>
+  <div class="booking-btns reveal">
+    <a href="https://wa.me/263779405017" class="btn-accent"><i class="fab fa-whatsapp"></i> WhatsApp Us</a>
+    <a href="tel:+263779405017" class="btn-outline-w"><i class="fa fa-phone"></i> Call Now</a>
+    <a href="contact.html" class="btn-outline-w"><i class="fa fa-envelope"></i> Send a message</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-logo"><span>miles</span>tech</div>
+    <div class="footer-links"><a href="index.html">Home</a><a href="services.html">Services</a><a href="projects.html">Projects</a><a href="contact.html">Contact</a><a href="tel:+263779405017">+263 77 940 5017</a></div>
+  </div>
+  <div class="footer-bottom"><span>©2026 Miles Tech. All rights reserved.</span><span>Harare, Zimbabwe</span></div>
+</footer>
+
+<script>
+// SCROLL REVEAL
+const obs = new IntersectionObserver(es => {
+  es.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, {threshold: 0.1});
+document.querySelectorAll('.reveal, .reveal-s').forEach(r => obs.observe(r));
+
+// DRAWER
+function toggleDrawer() {
+  const drawer   = document.getElementById('drawer');
+  const backdrop = document.getElementById('drawerBackdrop');
+  const btn      = document.getElementById('menuBtn');
+  const isOpen   = drawer.classList.toggle('open');
+  backdrop.classList.toggle('open', isOpen);
+  btn.classList.toggle('open', isOpen);
+  document.body.style.overflow = isOpen ? 'hidden' : '';
+}
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('drawerBackdrop').classList.remove('open');
+  document.getElementById('menuBtn').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeDrawer(); });
+
+// FAQ
+document.querySelectorAll('.faq-item').forEach(item => {
+  item.addEventListener('click', () => item.classList.toggle('open'));
+});
+</script>
+</body>
+</html>

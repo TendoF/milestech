@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projects — Miles Tech</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--cream:#f5f0eb;--warm:#e8ddd4;--dark:#1a1714;--mid:#4a4440;--accent:#c9a87a;--text:#2d2926;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9000;opacity:0.6;}
+
+/* ─── NAV ─────────────────────────────────────────── */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:400;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:22px 48px;
+  background:rgba(26,23,20,0.92);
+  backdrop-filter:blur(14px);
+}
+.nav-logo{
+  font-family:'DM Sans',sans-serif;font-size:15px;font-weight:400;
+  color:#fff;text-decoration:none;letter-spacing:0.02em;
+}
+.nav-logo span{font-weight:300;color:rgba(255,255,255,0.4);}
+
+/* Desktop center links */
+.nav-desktop{
+  position:absolute;left:50%;transform:translateX(-50%);
+  display:flex;gap:36px;align-items:center;
+}
+.nav-desktop a{
+  font-size:13px;color:rgba(255,255,255,0.6);text-decoration:none;
+  letter-spacing:0.04em;transition:color 0.3s;
+}
+.nav-desktop a:hover{color:#fff;}
+
+/* ─── MENU BUTTON ─────────────────────────────────── */
+.menu-btn{
+  display:none;
+  align-items:center;gap:9px;
+  background:none;border:none;cursor:pointer;
+  padding:6px 0;
+}
+.menu-btn-label{
+  font-family:'DM Sans',sans-serif;font-size:11px;
+  letter-spacing:0.18em;text-transform:uppercase;
+  color:rgba(255,255,255,0.55);transition:color 0.3s;
+}
+.menu-btn:hover .menu-btn-label{color:#fff;}
+.menu-btn-icon{
+  width:36px;height:36px;border-radius:50%;
+  border:1px solid rgba(255,255,255,0.18);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;
+  transition:border-color 0.3s,background 0.3s;
+  flex-shrink:0;
+}
+.menu-btn:hover .menu-btn-icon{border-color:var(--accent);background:rgba(201,168,122,0.08);}
+.menu-btn-icon span{
+  display:block;width:14px;height:1.5px;background:#fff;border-radius:2px;
+  transition:all 0.35s cubic-bezier(0.4,0,0.2,1);transform-origin:center;
+}
+.menu-btn.open .menu-btn-icon{border-color:rgba(255,255,255,0.35);background:rgba(255,255,255,0.06);}
+.menu-btn.open .menu-btn-icon span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+.menu-btn.open .menu-btn-icon span:nth-child(2){opacity:0;transform:scaleX(0);}
+.menu-btn.open .menu-btn-icon span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+
+/* ─── RIGHT-SIDE DRAWER ───────────────────────────── */
+.drawer-backdrop{
+  position:fixed;inset:0;z-index:480;
+  background:rgba(0,0,0,0);
+  pointer-events:none;
+  transition:background 0.4s ease;
+}
+.drawer-backdrop.open{
+  background:rgba(0,0,0,0.55);
+  pointer-events:all;
+}
+.drawer{
+  position:fixed;top:0;right:0;bottom:0;z-index:490;
+  width:min(320px,85vw);
+  background:var(--dark);
+  display:flex;flex-direction:column;
+  transform:translateX(100%);
+  transition:transform 0.42s cubic-bezier(0.4,0,0.2,1);
+  overflow:hidden;
+}
+.drawer.open{transform:translateX(0);}
+.drawer-top{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:22px 28px;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  flex-shrink:0;
+}
+.drawer-brand{
+  font-family:'DM Sans',sans-serif;font-size:14px;font-weight:300;
+  color:rgba(255,255,255,0.5);letter-spacing:0.04em;
+}
+.drawer-close{
+  width:34px;height:34px;border-radius:50%;
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all 0.3s;color:rgba(255,255,255,0.5);font-size:14px;
+}
+.drawer-close:hover{background:rgba(255,255,255,0.12);color:#fff;}
+.drawer-links{
+  display:flex;flex-direction:column;
+  padding:40px 28px 0;
+  flex:1;
+}
+.drawer-link{
+  font-family:'Cormorant Garamond',serif;
+  font-size:40px;font-weight:300;
+  color:rgba(255,255,255,0.18);
+  text-decoration:none;
+  padding:14px 0;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  display:flex;align-items:center;justify-content:space-between;
+  transition:color 0.3s,padding-left 0.3s;
+  opacity:0;transform:translateX(20px);
+}
+.drawer.open .drawer-link{
+  color:rgba(255,255,255,0.8);
+  opacity:1;transform:translateX(0);
+}
+.drawer.open .drawer-link:nth-child(1){transition:color 0.3s,padding-left 0.3s,opacity 0.4s 0.08s,transform 0.4s 0.08s;}
+.drawer.open .drawer-link:nth-child(2){transition:color 0.3s,padding-left 0.3s,opacity 0.4s 0.15s,transform 0.4s 0.15s;}
+.drawer.open .drawer-link:nth-child(3){transition:color 0.3s,padding-left 0.3s,opacity 0.4s 0.22s,transform 0.4s 0.22s;}
+.drawer.open .drawer-link:nth-child(4){transition:color 0.3s,padding-left 0.3s,opacity 0.4s 0.29s,transform 0.4s 0.29s;}
+.drawer-link:hover{color:#fff;padding-left:6px;}
+.drawer-link i{font-size:14px;color:rgba(255,255,255,0.15);transition:color 0.3s,transform 0.3s;}
+.drawer-link:hover i{color:var(--accent);transform:translateX(3px);}
+.drawer-contact{
+  padding:28px;border-top:1px solid rgba(255,255,255,0.06);
+  display:flex;flex-direction:column;gap:14px;
+  opacity:0;transition:opacity 0.4s 0.35s;
+}
+.drawer.open .drawer-contact{opacity:1;}
+.drawer-contact-item{
+  display:flex;align-items:center;gap:12px;
+  text-decoration:none;
+  color:rgba(255,255,255,0.35);font-size:13px;font-weight:300;
+  transition:color 0.3s;
+}
+.drawer-contact-item:hover{color:rgba(255,255,255,0.75);}
+.drawer-contact-item i{color:var(--accent);font-size:14px;width:16px;text-align:center;}
+.drawer-wa-btn{
+  margin-top:4px;
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  background:var(--accent);color:#fff;border-radius:100px;
+  padding:12px 20px;font-size:13px;font-weight:400;text-decoration:none;
+  transition:background 0.3s;
+}
+.drawer-wa-btn:hover{background:#b8965e;}
+/* ─── END NAV ─────────────────────────────────────── */
+
+/* PAGE HERO */
+.page-hero{background:var(--dark);padding:160px 48px 100px;position:relative;overflow:hidden;}
+.hero-orb{position:absolute;top:20%;right:15%;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,122,0.14),transparent 70%);animation:float 8s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-18px);}}
+.page-hero-content{position:relative;z-index:2;}
+.page-eyebrow{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:20px;}
+.page-title{font-family:'Cormorant Garamond',serif;font-size:clamp(52px,7vw,96px);font-weight:300;line-height:0.95;color:#fff;margin-bottom:28px;}
+.page-title em{font-style:italic;color:var(--accent);}
+.page-subtitle{font-size:15px;font-weight:300;color:rgba(255,255,255,0.5);line-height:1.8;max-width:480px;}
+
+/* FILTER */
+.filter-bar{padding:48px 48px 0;display:flex;gap:12px;flex-wrap:wrap;}
+.filter-btn{padding:10px 22px;border-radius:100px;font-size:13px;font-weight:400;border:1px solid rgba(0,0,0,0.15);background:transparent;color:var(--mid);cursor:pointer;transition:all 0.3s;}
+.filter-btn.active,.filter-btn:hover{background:var(--dark);color:#fff;border-color:var(--dark);}
+.filter-count{display:inline-block;background:rgba(0,0,0,0.1);border-radius:100px;padding:1px 8px;font-size:11px;margin-left:4px;}
+.filter-btn.active .filter-count{background:rgba(255,255,255,0.2);}
+
+/* PROJECTS GRID */
+.projects-grid{padding:48px;display:grid;grid-template-columns:repeat(2,1fr);gap:3px;}
+.proj-card{position:relative;overflow:hidden;cursor:pointer;display:block;text-decoration:none;color:inherit;}
+.proj-card.wide{grid-column:span 2;}
+.pc-img{position:absolute;inset:0;}
+.pc-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.8s cubic-bezier(0.4,0,0.2,1),filter 0.6s;filter:brightness(0.35) saturate(0.7);}
+.proj-card:hover .pc-img img{transform:scale(1.06);filter:brightness(0.2) saturate(0.5);}
+.pc-content{position:relative;z-index:2;padding:52px 44px;min-height:380px;display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(135deg,rgba(26,23,20,0.45) 0%,rgba(26,23,20,0.1) 100%);}
+.proj-card.wide .pc-content{min-height:420px;}
+.pc-top{display:flex;justify-content:space-between;align-items:flex-start;}
+.pc-cat{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--accent);background:rgba(201,168,122,0.15);border:1px solid rgba(201,168,122,0.3);padding:6px 14px;border-radius:100px;}
+.pc-num{font-family:'Cormorant Garamond',serif;font-size:72px;font-weight:300;color:rgba(255,255,255,0.08);line-height:1;}
+.pc-title{font-family:'Cormorant Garamond',serif;font-size:clamp(24px,3vw,36px);font-weight:300;color:#fff;line-height:1.15;margin-bottom:12px;}
+.proj-card.wide .pc-title{font-size:clamp(28px,3.5vw,44px);}
+.pc-desc{font-size:13px;font-weight:300;color:rgba(255,255,255,0.6);line-height:1.75;margin-bottom:20px;max-width:440px;}
+.pc-result-box{background:rgba(201,168,122,0.12);border:1px solid rgba(201,168,122,0.25);border-radius:4px;padding:12px 16px;margin-bottom:20px;display:inline-block;}
+.pc-result-label{font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;}
+.pc-result-val{font-size:13px;color:#fff;font-weight:400;}
+.pc-footer{display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,0.1);padding-top:16px;}
+.pc-tags{display:flex;gap:8px;flex-wrap:wrap;}
+.pc-tag{font-size:10px;color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.06);padding:4px 10px;border-radius:100px;}
+.pc-arrow{color:rgba(255,255,255,0.5);font-size:13px;transition:color 0.3s,transform 0.3s;}
+.proj-card:hover .pc-arrow{color:var(--accent);transform:translate(3px,-3px);}
+
+/* IMPACT */
+.impact{background:var(--dark);padding:100px 48px;}
+.impact-header{margin-bottom:64px;}
+.impact-label{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:12px;}
+.impact-title{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,4vw,56px);font-weight:300;color:#fff;line-height:1.1;}
+.impact-title em{font-style:italic;color:var(--accent);}
+.impact-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;}
+.impact-stat{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);padding:40px 32px;}
+.impact-val{font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:300;color:var(--accent);line-height:1;margin-bottom:12px;}
+.impact-label-text{font-size:13px;font-weight:300;color:rgba(255,255,255,0.5);line-height:1.5;}
+
+/* TESTIMONIALS */
+.testi-section{padding:100px 48px;background:var(--warm);}
+.testi-header{margin-bottom:56px;}
+.testi-label{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);margin-bottom:12px;}
+.testi-title{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,4vw,52px);font-weight:300;}
+.testi-title em{font-style:italic;}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;}
+.testi-card{background:var(--cream);padding:36px 28px;}
+.testi-stars{color:var(--accent);font-size:12px;margin-bottom:20px;letter-spacing:3px;}
+.testi-quote{font-family:'Cormorant Garamond',serif;font-size:19px;font-style:italic;font-weight:300;color:var(--dark);line-height:1.6;margin-bottom:28px;}
+.testi-name{font-size:13px;font-weight:500;margin-bottom:4px;}
+.testi-role{font-size:12px;color:var(--mid);}
+
+/* PLATFORMS */
+.platforms{padding:80px 48px;background:var(--cream);}
+.plat-label{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);margin-bottom:12px;text-align:center;}
+.plat-title{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,3.5vw,48px);font-weight:300;text-align:center;margin-bottom:48px;}
+.plat-title em{font-style:italic;}
+.plat-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:2px;}
+.plat-item{background:var(--warm);padding:36px 20px;text-align:center;transition:all 0.3s;cursor:default;}
+.plat-item:hover{background:var(--dark);}
+.plat-item i{font-size:32px;color:var(--mid);margin-bottom:12px;display:block;transition:color 0.3s;}
+.plat-item:hover i{color:var(--accent);}
+.plat-name{font-size:12px;color:var(--mid);transition:color 0.3s;}
+.plat-item:hover .plat-name{color:rgba(255,255,255,0.6);}
+
+/* BANNER IMG */
+.proj-banner{position:relative;overflow:hidden;height:440px;}
+.proj-banner img{width:100%;height:100%;object-fit:cover;transition:transform 1s cubic-bezier(0.4,0,0.2,1),filter 0.7s;filter:brightness(0.38) saturate(0.7);}
+.proj-banner:hover img{transform:scale(1.04);filter:brightness(0.28);}
+.proj-banner-content{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px;}
+.proj-banner-tag{font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;}
+.proj-banner-title{font-family:'Cormorant Garamond',serif;font-size:clamp(38px,6vw,72px);font-weight:300;color:#fff;line-height:1;margin-bottom:28px;}
+.proj-banner-title em{font-style:italic;}
+.proj-banner-btn{display:inline-flex;align-items:center;gap:10px;padding:14px 32px;border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:100px;font-size:13px;text-decoration:none;background:rgba(255,255,255,0.06);backdrop-filter:blur(8px);transition:all 0.35s;}
+.proj-banner:hover .proj-banner-btn{background:var(--accent);border-color:var(--accent);}
+
+/* CTA */
+.cta-section{background:linear-gradient(135deg,#e8ddd4,#c5b8ab);padding:100px 48px;text-align:center;}
+.cta-title{font-family:'Cormorant Garamond',serif;font-size:clamp(40px,5vw,72px);font-weight:300;line-height:1.1;margin-bottom:16px;}
+.cta-title em{font-style:italic;}
+.cta-sub{font-size:14px;color:var(--mid);margin-bottom:48px;}
+.cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+.btn-dark{display:inline-flex;align-items:center;gap:10px;padding:16px 36px;background:var(--dark);color:#fff;border-radius:100px;font-size:14px;text-decoration:none;transition:all 0.3s;}
+.btn-dark:hover{background:var(--accent);}
+.btn-out{display:inline-flex;align-items:center;gap:10px;padding:16px 36px;border:1px solid var(--dark);color:var(--dark);border-radius:100px;font-size:14px;text-decoration:none;transition:all 0.3s;}
+.btn-out:hover{background:var(--dark);color:#fff;}
+
+footer{background:var(--dark);padding:60px 48px 36px;}
+.footer-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:48px;}
+.footer-logo{font-family:'DM Sans',sans-serif;font-size:22px;font-weight:300;color:#fff;}
+.footer-logo span{font-weight:400;}
+.footer-links{display:flex;gap:32px;flex-wrap:wrap;}
+.footer-links a{font-size:13px;color:rgba(255,255,255,0.4);text-decoration:none;transition:color 0.3s;}
+.footer-links a:hover{color:#fff;}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.08);padding-top:24px;display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,0.3);}
+
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 0.8s ease,transform 0.8s ease;}
+.reveal.visible{opacity:1;transform:none;}
+.reveal-s{opacity:0;transform:scale(0.95);transition:opacity 0.8s ease,transform 0.8s ease;}
+.reveal-s.visible{opacity:1;transform:scale(1);}
+
+@media(max-width:900px){
+  .nav{padding:20px 24px;}
+  .nav-desktop{display:none;}
+  .menu-btn{display:flex;}
+
+  .page-hero{padding:120px 24px 80px;}
+  .filter-bar{padding:32px 24px 0;}
+  .projects-grid{padding:24px;grid-template-columns:1fr;}
+  .proj-card.wide{grid-column:span 1;}
+  .pc-content{min-height:300px;padding:36px 28px;}
+  .impact{padding:80px 24px;}
+  .impact-grid{grid-template-columns:1fr 1fr;}
+  .testi-section{padding:80px 24px;}
+  .testi-grid{grid-template-columns:1fr;}
+  .platforms{padding:60px 24px;}
+  .plat-grid{grid-template-columns:repeat(3,1fr);}
+  .proj-banner{height:300px;}
+  .cta-section{padding:80px 24px;}
+  .footer-top{flex-direction:column;gap:24px;}
+  .footer-bottom{flex-direction:column;gap:8px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ─── DRAWER BACKDROP ─── -->
+<div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
+
+<!-- ─── RIGHT-SIDE DRAWER ─── -->
+<div class="drawer" id="drawer">
+  <div class="drawer-top">
+    <span class="drawer-brand">miles<strong style="font-weight:400;color:rgba(255,255,255,0.7)">tech</strong></span>
+    <button class="drawer-close" onclick="closeDrawer()" aria-label="Close menu">
+      <i class="fa fa-xmark"></i>
+    </button>
+  </div>
+  <div class="drawer-links">
+    <a href="index.html" class="drawer-link" onclick="closeDrawer()">Home <i class="fa fa-arrow-right"></i></a>
+    <a href="services.html" class="drawer-link" onclick="closeDrawer()">Services <i class="fa fa-arrow-right"></i></a>
+    <a href="projects.html" class="drawer-link" onclick="closeDrawer()">Projects <i class="fa fa-arrow-right"></i></a>
+    <a href="contact.html" class="drawer-link" onclick="closeDrawer()">Contact <i class="fa fa-arrow-right"></i></a>
+  </div>
+  <div class="drawer-contact">
+    <a href="tel:+263779405017" class="drawer-contact-item">
+      <i class="fa fa-phone"></i> +263 77 940 5017
+    </a>
+    <a href="mailto:matizawayne@gmail.com" class="drawer-contact-item">
+      <i class="fa fa-envelope"></i> matizawayne@gmail.com
+    </a>
+    <a href="https://wa.me/263779405017" class="drawer-wa-btn">
+      <i class="fab fa-whatsapp"></i> WhatsApp us
+    </a>
+  </div>
+</div>
+
+<!-- ─── NAV ─── -->
+<nav class="nav">
+  <a href="index.html" class="nav-logo">miles<span>tech</span></a>
+  <div class="nav-desktop">
+    <a href="index.html">Home</a>
+    <a href="services.html">Services</a>
+    <a href="projects.html">Projects</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <button class="menu-btn" id="menuBtn" onclick="toggleDrawer()" aria-label="Open menu">
+    <span class="menu-btn-label">Menu</span>
+    <div class="menu-btn-icon">
+      <span></span><span></span><span></span>
+    </div>
+  </button>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="hero-orb"></div>
+  <div class="page-hero-content">
+    <p class="page-eyebrow">Our track record</p>
+    <h1 class="page-title">Selected <em>Projects</em></h1>
+    <p class="page-subtitle">Real results for real clients. A selection of what we've delivered across Zimbabwe and beyond.</p>
+  </div>
+</div>
+
+<!-- FILTERS -->
+<div class="filter-bar reveal">
+  <button class="filter-btn active" onclick="filterProjs('all',this)">All <span class="filter-count">9</span></button>
+  <button class="filter-btn" onclick="filterProjs('recovery',this)">Account Recovery <span class="filter-count">3</span></button>
+  <button class="filter-btn" onclick="filterProjs('marketing',this)">Marketing <span class="filter-count">2</span></button>
+  <button class="filter-btn" onclick="filterProjs('it',this)">IT Support <span class="filter-count">2</span></button>
+  <button class="filter-btn" onclick="filterProjs('growth',this)">Social Growth <span class="filter-count">2</span></button>
+</div>
+
+<!-- PROJECTS GRID -->
+<div class="projects-grid" id="projGrid">
+
+  <div class="proj-card wide reveal-s" data-cat="recovery">
+    <div class="pc-img"><img src="https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=1400&q=80&fit=crop" alt="Cybersecurity account recovery" loading="lazy"></div>
+    <div class="pc-content">
+      <div class="pc-top"><span class="pc-cat">Account Recovery</span><span class="pc-num">01</span></div>
+      <div class="pc-bottom">
+        <h3 class="pc-title">Instagram Business Account — Complete Takeover Recovery</h3>
+        <p class="pc-desc">A Harare-based fashion retailer had their 12,000-follower Instagram account completely hijacked. Email, phone, and password all changed. We recovered full access within 36 hours.</p>
+        <div class="pc-result-box"><div class="pc-result-label">Result</div><div class="pc-result-val">Full account restored in 36 hours — all 12,000 followers retained</div></div>
+        <div class="pc-footer"><div class="pc-tags"><span class="pc-tag">Instagram</span><span class="pc-tag">Emergency Recovery</span><span class="pc-tag">Identity Verification</span></div><i class="fa fa-arrow-up-right-from-square pc-arrow"></i></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="proj-card reveal-s" data-cat="marketing">
+    <div class="pc-img"><img src="https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=800&q=80&fit=crop" alt="Digital marketing campaign" loading="lazy"></div>
+    <div class="pc-content">
+      <div class="pc-top"><span class="pc-cat">Marketing</span><span class="pc-num">02</span></div>
+      <div class="pc-bottom">
+        <h3 class="pc-title">Restaurant — Facebook Ad Campaign</h3>
+        <p class="pc-desc">3-month Facebook & Instagram ad campaign for a Bulawayo restaurant targeting local audience with promotional content.</p>
+        <div class="pc-result-box"><div class="pc-result-label">Result</div><div class="pc-result-val">340% reach increase, 180 new bookings in 90 days</div></div>
+        <div class="pc-footer"><div class="pc-tags"><span class="pc-tag">Facebook Ads</span><span class="pc-tag">Instagram</span></div><i class="fa fa-arrow-up-right-from-square pc-arrow"></i></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="proj-card reveal-s" data-cat="growth">
+    <div class="pc-img"><img src="https://images.unsplash.com/photo-1559526324-593bc073d938?w=800&q=80&fit=crop" alt="Social media growth followers" loading="lazy"></div>
+    <div class="pc-content">
+      <div class="pc-top"><span class="pc-cat">Social Growth</span><span class="pc-num">03</span></div>
+      <div class="pc-bottom">
+        <h3 class="pc-title">Clothing Brand — 200 to 8,000 Followers</h3>
+        <p class="pc-desc">Startup fashion brand needed credibility fast. Phased growth strategy across Facebook and Instagram over 4 weeks.</p>
+        <div class="pc-result-box"><div class="pc-result-label">Result</div><div class="pc-result-val">7,800 new followers delivered in 4 weeks</div></div>
+        <div class="pc-footer"><div class="pc-tags"><span class="pc-tag">Facebook</span><span class="pc-tag">Instagram</span></div><i class="fa fa-arrow-up-right-from-square pc-arrow"></i></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="proj-card reveal-s" data-cat="recovery">
+    <div class="pc-img"><img src="https://images.unsplash.com/photo-1555421689-d68471e189f2?w=800&q=80&fit=crop" alt="Facebook Business Manager recovery" loading="lazy"></div>
+    <div class="pc-content">
+      <div class="pc-top"><span class="pc-cat">Account Recovery</span><span class="pc-num">04</span></div>
+      <div class="pc-bottom">
+        <h3 class="pc-title">Facebook Business Manager — Ad Account Unbanned</h3>
+        <p class="pc-desc">A marketing agency's entire Business Manager was banned mid-campaign. We navigated appeals and had full access restored.</p>
+        <div class="pc-result-box"><div class="pc-result-label">Result</div><div class="pc-result-val">Business Manager + 3 ad accounts restored in 72 hours</div></div>
+        <div class="pc-footer"><div class="pc-tags"><span class="pc-tag">Facebook</span><span class="pc-tag">Business Manager</span></div><i class="fa fa-arrow-up-right-from-square pc-arrow"></i></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="proj-card reveal-s" data-cat="it">
+    <div class="pc-img"><img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80&fit=crop" alt="IT network setup office" loading="lazy"></div>
+    <div class="pc-content">
+      <div class="pc-top"><span class="pc-cat">IT Support</span><span class="pc-num">05</span></div>
+      <div class="pc-bottom">
+        <h3 class="pc-title">SME Office — Network Setup & Security</h3>
+        <p class="pc-desc">Small accounting firm needed complete office network, shared storage, and security setup for 8 staff. Done in one day.</p>
+        <div class="pc-result-box"><div class="pc-result-label">Result</div><div class="pc-result-val">8-workstation network installed & secured in 6 hours</div></div>
+        <div class="pc-footer"><div class="pc-tags"><span class="pc-tag">Network</span><span class="pc-tag">Security</span></div><i class="fa fa-arrow-up-right-from-square pc-arrow"></i></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="proj-card reveal-s" data-cat="growth">
+    <div class="pc-img"><img src="https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=800&q=80&fit=crop" alt="TikTok creator social media" loading="lazy"></div>
+    <div class="pc-content">
+      <div class="pc-top"><span class="pc-cat">Social Growth</span><span class="pc-num">06</span></div>
+      <div class="pc-bottom">
+        <h3 class="pc-title">TikTok Creator — 50K Views Campaign</h3>
+        <p class="pc-desc">A Zimbabwean content creator needed a viral push. We delivered a views and engagement boost that triggered the algorithm.</p>
+        <div class="pc-result-box"><div class="pc-result-label">Result</div><div class="pc-result-val">55,000 views + 2,400 new followers gained</div></div>
+        <div class="pc-footer"><div class="pc-tags"><span class="pc-tag">TikTok</span><span class="pc-tag">Video Views</span></div><i class="fa fa-arrow-up-right-from-square pc-arrow"></i></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="proj-card reveal-s" data-cat="recovery">
+    <div class="pc-img"><img src="https://images.unsplash.com/photo-1596526131083-e8c633064405?w=800&q=80&fit=crop" alt="Gmail email account recovery" loading="lazy"></div>
+    <div class="pc-content">
+      <div class="pc-top"><span class="pc-cat">Account Recovery</span><span class="pc-num">07</span></div>
+      <div class="pc-bottom">
+        <h3 class="pc-title">Gmail Account — 5 Years of Emails Recovered</h3>
+        <p class="pc-desc">Business owner lost access to 5-year-old Gmail account with all company communications. Recovered via Google's verification process.</p>
+        <div class="pc-result-box"><div class="pc-result-label">Result</div><div class="pc-result-val">Full Gmail access restored in 48 hours — 5 years of data saved</div></div>
+        <div class="pc-footer"><div class="pc-tags"><span class="pc-tag">Gmail</span><span class="pc-tag">Email Recovery</span></div><i class="fa fa-arrow-up-right-from-square pc-arrow"></i></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="proj-card reveal-s" data-cat="marketing">
+    <div class="pc-img"><img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80&fit=crop" alt="Real estate marketing campaign" loading="lazy"></div>
+    <div class="pc-content">
+      <div class="pc-top"><span class="pc-cat">Marketing</span><span class="pc-num">08</span></div>
+      <div class="pc-bottom">
+        <h3 class="pc-title">Real Estate Agency — WhatsApp Campaign</h3>
+        <p class="pc-desc">WhatsApp broadcast marketing campaign for a property agency. Targeted 2,000 potential buyers with property listings.</p>
+        <div class="pc-result-box"><div class="pc-result-label">Result</div><div class="pc-result-val">43 qualified leads, 7 properties sold in 30 days</div></div>
+        <div class="pc-footer"><div class="pc-tags"><span class="pc-tag">WhatsApp</span><span class="pc-tag">Real Estate</span></div><i class="fa fa-arrow-up-right-from-square pc-arrow"></i></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="proj-card reveal-s" data-cat="it">
+    <div class="pc-img"><img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&q=80&fit=crop" alt="Ransomware data recovery cybersecurity" loading="lazy"></div>
+    <div class="pc-content">
+      <div class="pc-top"><span class="pc-cat">IT Support</span><span class="pc-num">09</span></div>
+      <div class="pc-bottom">
+        <h3 class="pc-title">Ransomware Attack — Full Data Recovery</h3>
+        <p class="pc-desc">Small business had systems encrypted by ransomware. We recovered 90% of data, cleaned all systems, and set up preventive security.</p>
+        <div class="pc-result-box"><div class="pc-result-label">Result</div><div class="pc-result-val">90% data recovered — all systems restored — no ransom paid</div></div>
+        <div class="pc-footer"><div class="pc-tags"><span class="pc-tag">Ransomware</span><span class="pc-tag">Data Recovery</span></div><i class="fa fa-arrow-up-right-from-square pc-arrow"></i></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- IMPACT STATS -->
+<section class="impact">
+  <div class="impact-header reveal"><div class="impact-label">Numbers that speak</div><h2 class="impact-title">Proven results, <em>real impact</em></h2></div>
+  <div class="impact-grid">
+    <div class="impact-stat reveal"><div class="impact-val">500+</div><div class="impact-label-text">Total accounts recovered or restored across all platforms</div></div>
+    <div class="impact-stat reveal"><div class="impact-val">50K+</div><div class="impact-label-text">Social media followers delivered to clients</div></div>
+    <div class="impact-stat reveal"><div class="impact-val">98%</div><div class="impact-label-text">Overall client satisfaction rate across all services</div></div>
+    <div class="impact-stat reveal"><div class="impact-val">24hr</div><div class="impact-label-text">Average emergency response and resolution time</div></div>
+  </div>
+</section>
+
+<!-- IMAGE BANNER -->
+<div class="proj-banner">
+  <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1600&q=80&fit=crop" alt="Professional team collaboration" loading="lazy">
+  <div class="proj-banner-content">
+    <div class="proj-banner-tag">Your success story starts here</div>
+    <h2 class="proj-banner-title">Ready to be<br><em>our next case study?</em></h2>
+    <a href="contact.html" class="proj-banner-btn">Book a consultation <i class="fa fa-arrow-right"></i></a>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<section class="testi-section">
+  <div class="testi-header reveal"><p class="testi-label">Client voices</p><h2 class="testi-title">What they <em>say</em></h2></div>
+  <div class="testi-grid">
+    <div class="testi-card reveal"><div class="testi-stars">★★★★★</div><p class="testi-quote">"My Instagram was stolen on a Friday evening. By Sunday they had fully restored it. Absolutely incredible service."</p><div class="testi-name">Chipo M.</div><div class="testi-role">Fashion Retailer, Harare</div></div>
+    <div class="testi-card reveal"><div class="testi-stars">★★★★★</div><p class="testi-quote">"The WhatsApp campaign they ran for us generated more leads than our entire year of traditional marketing. Genuinely impressed."</p><div class="testi-name">Tinashe R.</div><div class="testi-role">Real Estate Agent, Harare</div></div>
+    <div class="testi-card reveal"><div class="testi-stars">★★★★★</div><p class="testi-quote">"I thought 5 years of emails were gone forever. Miles Tech got them back. Worth every dollar. I recommend them to everyone."</p><div class="testi-name">Stanley D.</div><div class="testi-role">Business Owner, Gweru</div></div>
+  </div>
+</section>
+
+<!-- PLATFORMS -->
+<section class="platforms">
+  <p class="plat-label reveal">Platforms we work on</p>
+  <h2 class="plat-title reveal">We cover <em>every platform</em></h2>
+  <div class="plat-grid">
+    <div class="plat-item reveal"><i class="fab fa-facebook"></i><div class="plat-name">Facebook</div></div>
+    <div class="plat-item reveal"><i class="fab fa-instagram"></i><div class="plat-name">Instagram</div></div>
+    <div class="plat-item reveal"><i class="fab fa-tiktok"></i><div class="plat-name">TikTok</div></div>
+    <div class="plat-item reveal"><i class="fab fa-whatsapp"></i><div class="plat-name">WhatsApp</div></div>
+    <div class="plat-item reveal"><i class="fab fa-youtube"></i><div class="plat-name">YouTube</div></div>
+    <div class="plat-item reveal"><i class="fab fa-google"></i><div class="plat-name">Google</div></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2 class="cta-title reveal">Your success story <em>starts here</em></h2>
+  <p class="cta-sub reveal">Let's solve your digital problem today. No obligation, fast response.</p>
+  <div class="cta-btns reveal">
+    <a href="contact.html" class="btn-dark"><i class="fa fa-calendar"></i> Book a consultation</a>
+    <a href="https://wa.me/263779405017" class="btn-out"><i class="fab fa-whatsapp"></i> WhatsApp now</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-logo"><span>miles</span>tech</div>
+    <div class="footer-links"><a href="index.html">Home</a><a href="services.html">Services</a><a href="projects.html">Projects</a><a href="contact.html">Contact</a><a href="tel:+263779405017">+263 77 940 5017</a></div>
+  </div>
+  <div class="footer-bottom"><span>©2026 Miles Tech. All rights reserved.</span><span>Harare, Zimbabwe</span></div>
+</footer>
+
+<script>
+// SCROLL REVEAL
+const obs = new IntersectionObserver(es => {
+  es.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, {threshold: 0.08});
+document.querySelectorAll('.reveal, .reveal-s').forEach(r => obs.observe(r));
+
+// DRAWER
+function toggleDrawer() {
+  const drawer   = document.getElementById('drawer');
+  const backdrop = document.getElementById('drawerBackdrop');
+  const btn      = document.getElementById('menuBtn');
+  const isOpen   = drawer.classList.toggle('open');
+  backdrop.classList.toggle('open', isOpen);
+  btn.classList.toggle('open', isOpen);
+  document.body.style.overflow = isOpen ? 'hidden' : '';
+}
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('drawerBackdrop').classList.remove('open');
+  document.getElementById('menuBtn').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeDrawer(); });
+
+// FILTER
+function filterProjs(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.proj-card').forEach(card => {
+    const show = cat === 'all' || card.dataset.cat === cat;
+    card.style.display = show ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>

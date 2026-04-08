@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — Miles Tech</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--cream:#f5f0eb;--warm:#e8ddd4;--dark:#1a1714;--mid:#4a4440;--accent:#c9a87a;--text:#2d2926;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9000;opacity:0.6;}
+
+/* ─── NEW NAV ─────────────────────────────────────── */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:400;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:22px 48px;
+  background:rgba(26,23,20,0.92);
+  backdrop-filter:blur(14px);
+}
+.nav-logo{
+  font-family:'DM Sans',sans-serif;font-size:15px;font-weight:400;
+  color:#fff;text-decoration:none;letter-spacing:0.02em;
+}
+.nav-logo span{font-weight:300;color:rgba(255,255,255,0.4);}
+
+/* Desktop links */
+.nav-desktop{display:flex;gap:36px;align-items:center;}
+.nav-desktop a{
+  font-size:13px;color:rgba(255,255,255,0.6);text-decoration:none;
+  letter-spacing:0.04em;transition:color 0.3s;
+}
+.nav-desktop a:hover{color:#fff;}
+
+/* ─── MENU BUTTON (replaces hamburger entirely) ─── */
+.menu-btn{
+  display:none; /* hidden on desktop */
+  align-items:center;gap:9px;
+  background:none;border:none;cursor:pointer;
+  padding:6px 0;
+}
+.menu-btn-label{
+  font-family:'DM Sans',sans-serif;font-size:11px;
+  letter-spacing:0.18em;text-transform:uppercase;
+  color:rgba(255,255,255,0.55);transition:color 0.3s;
+}
+.menu-btn:hover .menu-btn-label{color:#fff;}
+.menu-btn-icon{
+  width:36px;height:36px;border-radius:50%;
+  border:1px solid rgba(255,255,255,0.18);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;
+  transition:border-color 0.3s,background 0.3s;
+  flex-shrink:0;
+}
+.menu-btn:hover .menu-btn-icon{border-color:var(--accent);background:rgba(201,168,122,0.08);}
+.menu-btn-icon span{
+  display:block;width:14px;height:1.5px;background:#fff;border-radius:2px;
+  transition:all 0.35s cubic-bezier(0.4,0,0.2,1);transform-origin:center;
+}
+/* open state — morph to X */
+.menu-btn.open .menu-btn-icon{border-color:rgba(255,255,255,0.35);background:rgba(255,255,255,0.06);}
+.menu-btn.open .menu-btn-icon span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+.menu-btn.open .menu-btn-icon span:nth-child(2){opacity:0;transform:scaleX(0);}
+.menu-btn.open .menu-btn-icon span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+
+/* ─── RIGHT-SIDE DRAWER ───────────────────────────── */
+/* Backdrop */
+.drawer-backdrop{
+  position:fixed;inset:0;z-index:480;
+  background:rgba(0,0,0,0);
+  pointer-events:none;
+  transition:background 0.4s ease;
+}
+.drawer-backdrop.open{
+  background:rgba(0,0,0,0.55);
+  pointer-events:all;
+}
+
+/* Drawer panel */
+.drawer{
+  position:fixed;top:0;right:0;bottom:0;z-index:490;
+  width:min(320px, 85vw);
+  background:var(--dark);
+  display:flex;flex-direction:column;
+  transform:translateX(100%);
+  transition:transform 0.42s cubic-bezier(0.4,0,0.2,1);
+  overflow:hidden;
+}
+.drawer.open{transform:translateX(0);}
+
+/* Drawer top bar */
+.drawer-top{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:22px 28px;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  flex-shrink:0;
+}
+.drawer-brand{
+  font-family:'DM Sans',sans-serif;font-size:14px;font-weight:300;
+  color:rgba(255,255,255,0.5);letter-spacing:0.04em;
+}
+.drawer-close{
+  width:34px;height:34px;border-radius:50%;
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all 0.3s;color:rgba(255,255,255,0.5);font-size:14px;
+}
+.drawer-close:hover{background:rgba(255,255,255,0.12);color:#fff;}
+
+/* Nav links inside drawer */
+.drawer-links{
+  display:flex;flex-direction:column;
+  padding:40px 28px 0;
+  flex:1;
+}
+.drawer-link{
+  font-family:'Cormorant Garamond',serif;
+  font-size:40px;font-weight:300;
+  color:rgba(255,255,255,0.18);
+  text-decoration:none;
+  padding:14px 0;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  display:flex;align-items:center;justify-content:space-between;
+  transition:color 0.3s,padding-left 0.3s;
+  opacity:0;transform:translateX(20px);
+}
+.drawer.open .drawer-link{
+  color:rgba(255,255,255,0.8);
+  opacity:1;transform:translateX(0);
+}
+.drawer.open .drawer-link:nth-child(1){transition:color 0.3s,padding-left 0.3s,opacity 0.4s 0.08s,transform 0.4s 0.08s;}
+.drawer.open .drawer-link:nth-child(2){transition:color 0.3s,padding-left 0.3s,opacity 0.4s 0.15s,transform 0.4s 0.15s;}
+.drawer.open .drawer-link:nth-child(3){transition:color 0.3s,padding-left 0.3s,opacity 0.4s 0.22s,transform 0.4s 0.22s;}
+.drawer.open .drawer-link:nth-child(4){transition:color 0.3s,padding-left 0.3s,opacity 0.4s 0.29s,transform 0.4s 0.29s;}
+.drawer-link:hover{color:#fff;padding-left:6px;}
+.drawer-link i{font-size:14px;color:rgba(255,255,255,0.15);transition:color 0.3s,transform 0.3s;}
+.drawer-link:hover i{color:var(--accent);transform:translateX(3px);}
+
+/* Drawer bottom contact */
+.drawer-contact{
+  padding:28px;border-top:1px solid rgba(255,255,255,0.06);
+  display:flex;flex-direction:column;gap:14px;
+  opacity:0;transition:opacity 0.4s 0.35s;
+}
+.drawer.open .drawer-contact{opacity:1;}
+.drawer-contact-item{
+  display:flex;align-items:center;gap:12px;
+  text-decoration:none;
+  color:rgba(255,255,255,0.35);font-size:13px;font-weight:300;
+  transition:color 0.3s;
+}
+.drawer-contact-item:hover{color:rgba(255,255,255,0.75);}
+.drawer-contact-item i{color:var(--accent);font-size:14px;width:16px;text-align:center;}
+.drawer-wa-btn{
+  margin-top:4px;
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  background:var(--accent);color:#fff;border-radius:100px;
+  padding:12px 20px;font-size:13px;font-weight:400;text-decoration:none;
+  transition:background 0.3s;
+}
+.drawer-wa-btn:hover{background:#b8965e;}
+
+/* ─── END NEW NAV ─────────────────────────────────── */
+
+/* HERO */
+.hero{min-height:100vh;background:var(--dark);display:grid;grid-template-columns:1fr 1fr;padding:120px 48px 80px;gap:80px;align-items:center;position:relative;overflow:hidden;}
+.hero-orb{position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,122,0.1),transparent 70%);pointer-events:none;}
+.hero-orb-1{left:-100px;top:30%;}
+.hero-orb-2{right:0;top:10%;animation:float 8s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-20px);}}
+
+.hero-left{position:relative;z-index:2;}
+.hero-eyebrow{font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:20px;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(64px,9vw,120px);font-weight:300;line-height:0.88;color:#fff;margin-bottom:32px;}
+.hero-title em{font-style:italic;color:var(--accent);}
+.hero-sub{font-size:15px;font-weight:300;color:rgba(255,255,255,0.5);line-height:1.8;margin-bottom:48px;max-width:380px;}
+.contact-links{display:flex;flex-direction:column;gap:20px;}
+.contact-link{display:flex;align-items:center;gap:18px;text-decoration:none;}
+.contact-link-icon{width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.3s;}
+.contact-link:hover .contact-link-icon{background:var(--accent);border-color:var(--accent);}
+.contact-link-icon i{font-size:17px;color:var(--accent);transition:color 0.3s;}
+.contact-link:hover .contact-link-icon i{color:#fff;}
+.contact-link-text-label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:4px;}
+.contact-link-text-val{font-size:15px;font-weight:300;color:#fff;}
+
+.hero-right{position:relative;z-index:2;}
+.form-box{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);padding:44px;}
+.form-heading{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;font-style:italic;color:#fff;margin-bottom:30px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.fg{margin-bottom:14px;}
+.fg label{display:block;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:8px;}
+.fg input,.fg select,.fg textarea{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);padding:13px 15px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:300;color:#fff;outline:none;border-radius:3px;transition:border-color 0.3s;appearance:none;}
+.fg input::placeholder,.fg textarea::placeholder{color:rgba(255,255,255,0.2);}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--accent);}
+.fg select option{background:var(--dark);color:#fff;}
+.fg textarea{resize:vertical;min-height:90px;}
+.submit-btn{width:100%;padding:15px;background:var(--accent);color:#fff;border:none;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:400;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-top:6px;transition:background 0.3s;}
+.submit-btn:hover{background:#b8965e;}
+.form-note-text{font-size:11px;color:rgba(255,255,255,0.25);text-align:center;margin-top:12px;line-height:1.6;}
+.form-success-box{display:none;text-align:center;padding:48px 20px;}
+.form-success-box i{font-size:52px;color:var(--accent);display:block;margin-bottom:20px;}
+.form-success-box h3{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;font-style:italic;color:#fff;margin-bottom:12px;}
+.form-success-box p{font-size:13px;color:rgba(255,255,255,0.5);line-height:1.75;}
+.form-success-box strong{color:var(--accent);}
+
+/* QUICK CONTACT */
+.quick{padding:80px 48px;background:var(--warm);}
+.sec-label{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);margin-bottom:12px;}
+.sec-title{font-family:'Cormorant Garamond',serif;font-size:clamp(34px,4vw,52px);font-weight:300;line-height:1.1;}
+.sec-title em{font-style:italic;}
+.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:48px;}
+.qcard{background:var(--cream);padding:44px 32px;text-align:center;text-decoration:none;color:inherit;display:block;transition:all 0.35s;}
+.qcard:hover{background:var(--dark);transform:translateY(-6px);}
+.qcard-ico{width:62px;height:62px;border-radius:50%;background:var(--warm);display:flex;align-items:center;justify-content:center;margin:0 auto 22px;transition:background 0.35s;}
+.qcard-ico i{font-size:24px;color:var(--accent);}
+.qcard:hover .qcard-ico{background:rgba(201,168,122,0.15);}
+.qcard-name{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid);margin-bottom:10px;transition:color 0.35s;}
+.qcard-val{font-size:16px;font-weight:400;color:var(--dark);margin-bottom:6px;transition:color 0.35s;}
+.qcard-sub{font-size:12px;color:var(--mid);transition:color 0.35s;}
+.qcard:hover .qcard-name,.qcard:hover .qcard-val,.qcard:hover .qcard-sub{color:rgba(255,255,255,0.7);}
+.qcard:hover .qcard-val{color:#fff;}
+
+/* BOOK A SERVICE */
+.book-services{padding:80px 48px;background:var(--cream);}
+.book-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:48px;}
+.bscard{display:block;text-decoration:none;color:inherit;background:var(--warm);overflow:hidden;transition:all 0.35s;position:relative;}
+.bscard:hover{transform:translateY(-5px);box-shadow:0 20px 50px rgba(0,0,0,0.15);}
+.bscard-img{height:150px;overflow:hidden;position:relative;}
+.bscard-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.7s cubic-bezier(0.4,0,0.2,1),filter 0.5s;filter:brightness(0.65) saturate(0.75);}
+.bscard:hover .bscard-img img{transform:scale(1.08);filter:brightness(0.4);}
+.bscard-img::after{content:'';position:absolute;bottom:0;left:0;right:0;height:50px;background:linear-gradient(to top,var(--warm),transparent);transition:background 0.35s;}
+.bscard:hover .bscard-img::after{background:linear-gradient(to top,var(--dark),transparent);}
+.bscard-body{padding:22px 22px 26px;background:var(--warm);transition:background 0.35s;}
+.bscard:hover .bscard-body{background:var(--dark);}
+.bscard-ico{font-size:18px;color:var(--accent);margin-bottom:8px;display:block;}
+.bscard-name{font-size:14px;font-weight:500;color:var(--dark);margin-bottom:4px;transition:color 0.35s;}
+.bscard:hover .bscard-name{color:#fff;}
+.bscard-price{font-size:12px;color:var(--accent);margin-bottom:8px;}
+.bscard-cta{font-size:11px;color:rgba(0,0,0,0.35);display:flex;align-items:center;gap:5px;transition:color 0.35s;}
+.bscard:hover .bscard-cta{color:rgba(255,255,255,0.5);}
+
+/* HOURS */
+.hours{padding:80px 48px;background:var(--dark);}
+.hours-inner{max-width:680px;margin:0 auto;text-align:center;}
+.hours .sec-label{color:rgba(255,255,255,0.4);}
+.hours .sec-title{color:#fff;margin-bottom:48px;}
+.hours-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-bottom:28px;}
+.hrow{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);padding:18px 24px;display:flex;justify-content:space-between;align-items:center;}
+.hrow.hl{background:rgba(201,168,122,0.1);border-color:rgba(201,168,122,0.3);}
+.hrow-day{font-size:13px;color:rgba(255,255,255,0.55);}
+.hrow-time{font-size:13px;font-weight:500;color:#fff;}
+.hrow.hl .hrow-time{color:var(--accent);}
+.emerg-box{background:rgba(201,168,122,0.07);border:1px solid rgba(201,168,122,0.22);border-radius:4px;padding:20px 24px;display:flex;align-items:flex-start;gap:16px;text-align:left;}
+.emerg-box i{color:var(--accent);font-size:20px;flex-shrink:0;margin-top:2px;}
+.emerg-box p{font-size:13px;color:rgba(255,255,255,0.6);line-height:1.75;}
+.emerg-box strong{color:var(--accent);}
+
+/* IMAGE BANNER */
+.contact-img-banner{position:relative;overflow:hidden;height:400px;}
+.contact-img-banner img{width:100%;height:100%;object-fit:cover;transition:transform 1s cubic-bezier(0.4,0,0.2,1),filter 0.7s;filter:brightness(0.35) saturate(0.65);}
+.contact-img-banner:hover img{transform:scale(1.04);filter:brightness(0.25);}
+.cib-content{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px;}
+.cib-tag{font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;}
+.cib-title{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,5.5vw,68px);font-weight:300;color:#fff;line-height:1;margin-bottom:28px;}
+.cib-title em{font-style:italic;}
+.cib-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
+.cib-wa{display:inline-flex;align-items:center;gap:8px;padding:13px 28px;background:var(--accent);color:#fff;border-radius:100px;font-size:13px;text-decoration:none;transition:all 0.3s;}
+.cib-wa:hover{background:#b8965e;}
+.cib-call{display:inline-flex;align-items:center;gap:8px;padding:13px 28px;border:1px solid rgba(255,255,255,0.35);color:#fff;border-radius:100px;font-size:13px;text-decoration:none;background:rgba(255,255,255,0.06);backdrop-filter:blur(8px);transition:all 0.3s;}
+.cib-call:hover{background:rgba(255,255,255,0.14);}
+
+/* GUARANTEES */
+.guarantees{padding:80px 48px;background:var(--warm);}
+.g-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;margin-top:48px;}
+.gitem{background:var(--cream);padding:40px 32px;display:flex;gap:20px;align-items:flex-start;}
+.gitem-ico{width:48px;height:48px;flex-shrink:0;background:var(--dark);border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.gitem-ico i{color:var(--accent);font-size:18px;}
+.gitem h3{font-size:16px;font-weight:500;margin-bottom:10px;}
+.gitem p{font-size:13px;font-weight:300;color:var(--mid);line-height:1.7;}
+
+/* LOCATION */
+.location{padding:80px 48px;background:var(--cream);}
+.loc-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
+.loc-text .sec-label{margin-bottom:12px;}
+.loc-text .sec-title{margin-bottom:24px;}
+.loc-desc{font-size:14px;font-weight:300;color:var(--mid);line-height:1.8;margin-bottom:32px;}
+.loc-details{display:flex;flex-direction:column;gap:16px;}
+.loc-detail{display:flex;align-items:center;gap:14px;font-size:14px;}
+.loc-detail i{color:var(--accent);width:20px;text-align:center;flex-shrink:0;}
+.loc-img{position:relative;overflow:hidden;height:360px;border-radius:4px;}
+.loc-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.8s cubic-bezier(0.4,0,0.2,1),filter 0.5s;filter:brightness(0.65) saturate(0.75);}
+.loc-img:hover img{transform:scale(1.05);filter:brightness(0.45);}
+.loc-badge{position:absolute;bottom:24px;left:24px;background:rgba(26,23,20,0.88);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.12);padding:14px 18px;border-radius:4px;}
+.loc-badge-label{font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:5px;}
+.loc-badge-val{font-size:15px;color:#fff;font-weight:300;}
+.loc-maps-link{position:absolute;top:20px;right:20px;background:rgba(26,23,20,0.8);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:12px;padding:8px 16px;border-radius:100px;text-decoration:none;backdrop-filter:blur(8px);transition:all 0.3s;}
+.loc-maps-link:hover{background:var(--accent);border-color:var(--accent);}
+
+/* FOOTER */
+footer{background:var(--dark);padding:60px 48px 36px;}
+.footer-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:48px;}
+.footer-logo{font-family:'DM Sans',sans-serif;font-size:22px;font-weight:300;color:#fff;}
+.footer-logo span{font-weight:400;}
+.footer-links{display:flex;gap:32px;flex-wrap:wrap;}
+.footer-links a{font-size:13px;color:rgba(255,255,255,0.4);text-decoration:none;transition:color 0.3s;}
+.footer-links a:hover{color:#fff;}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.08);padding-top:24px;display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,0.3);}
+
+/* ANIMATIONS */
+.reveal{opacity:0;transform:translateY(36px);transition:opacity 0.8s ease,transform 0.8s ease;}
+.reveal.visible{opacity:1;transform:none;}
+.reveal-s{opacity:0;transform:scale(0.95);transition:opacity 0.8s ease,transform 0.8s ease;}
+.reveal-s.visible{opacity:1;transform:scale(1);}
+
+/* ─── RESPONSIVE ──────────────────────────────────── */
+@media(max-width:900px){
+  .nav{padding:20px 24px;}
+  .nav-desktop{display:none;}     /* hide desktop links */
+  .menu-btn{display:flex;}        /* show menu button */
+
+  .hero{grid-template-columns:1fr;padding:110px 24px 60px;gap:48px;min-height:auto;}
+  .quick{padding:60px 24px;}
+  .quick-grid{grid-template-columns:1fr;}
+  .book-services{padding:60px 24px;}
+  .book-grid{grid-template-columns:1fr 1fr;}
+  .hours{padding:60px 24px;}
+  .hours-grid{grid-template-columns:1fr;}
+  .contact-img-banner{height:300px;}
+  .guarantees{padding:60px 24px;}
+  .g-grid{grid-template-columns:1fr;}
+  .location{padding:60px 24px;}
+  .loc-grid{grid-template-columns:1fr;}
+  .footer-top{flex-direction:column;gap:24px;}
+  .footer-bottom{flex-direction:column;gap:8px;}
+  .form-row{grid-template-columns:1fr;}
+}
+@media(max-width:520px){
+  .book-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- ─── DRAWER BACKDROP ─── -->
+<div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
+
+<!-- ─── RIGHT-SIDE DRAWER ─── -->
+<div class="drawer" id="drawer">
+  <div class="drawer-top">
+    <span class="drawer-brand">miles<strong style="font-weight:400;color:rgba(255,255,255,0.7)">tech</strong></span>
+    <button class="drawer-close" onclick="closeDrawer()" aria-label="Close menu">
+      <i class="fa fa-xmark"></i>
+    </button>
+  </div>
+  <div class="drawer-links">
+    <a href="index.html" class="drawer-link" onclick="closeDrawer()">Home <i class="fa fa-arrow-right"></i></a>
+    <a href="services.html" class="drawer-link" onclick="closeDrawer()">Services <i class="fa fa-arrow-right"></i></a>
+    <a href="projects.html" class="drawer-link" onclick="closeDrawer()">Projects <i class="fa fa-arrow-right"></i></a>
+    <a href="contact.html" class="drawer-link" onclick="closeDrawer()">Contact <i class="fa fa-arrow-right"></i></a>
+  </div>
+  <div class="drawer-contact">
+    <a href="tel:+263779405017" class="drawer-contact-item">
+      <i class="fa fa-phone"></i> +263 77 940 5017
+    </a>
+    <a href="mailto:matizawayne@gmail.com" class="drawer-contact-item">
+      <i class="fa fa-envelope"></i> matizawayne@gmail.com
+    </a>
+    <a href="https://wa.me/263779405017" class="drawer-wa-btn">
+      <i class="fab fa-whatsapp"></i> WhatsApp us
+    </a>
+  </div>
+</div>
+
+<!-- ─── NAV ─── -->
+<nav class="nav">
+  <a href="index.html" class="nav-logo">miles<span>tech</span></a>
+  <div class="nav-desktop">
+    <a href="index.html">Home</a>
+    <a href="services.html">Services</a>
+    <a href="projects.html">Projects</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <button class="menu-btn" id="menuBtn" onclick="toggleDrawer()" aria-label="Open menu">
+    <span class="menu-btn-label">Menu</span>
+    <div class="menu-btn-icon">
+      <span></span><span></span><span></span>
+    </div>
+  </button>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+
+  <div class="hero-left reveal">
+    <p class="hero-eyebrow">Get in touch</p>
+    <h1 class="hero-title"><em>Say</em><br>hello</h1>
+    <p class="hero-sub">We look forward to hearing from you. Tell us your problem and we'll respond within the hour.</p>
+    <div class="contact-links">
+      <a href="tel:+263779405017" class="contact-link">
+        <div class="contact-link-icon"><i class="fa fa-phone"></i></div>
+        <div>
+          <div class="contact-link-text-label">Phone / WhatsApp</div>
+          <div class="contact-link-text-val">+263 77 940 5017</div>
+        </div>
+      </a>
+      <a href="mailto:matizawayne@gmail.com" class="contact-link">
+        <div class="contact-link-icon"><i class="fa fa-envelope"></i></div>
+        <div>
+          <div class="contact-link-text-label">Email</div>
+          <div class="contact-link-text-val">matizawayne@gmail.com</div>
+        </div>
+      </a>
+      <a href="https://wa.me/263779405017" class="contact-link">
+        <div class="contact-link-icon"><i class="fab fa-whatsapp"></i></div>
+        <div>
+          <div class="contact-link-text-label">WhatsApp — Fastest Response</div>
+          <div class="contact-link-text-val">Message us now</div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <div class="hero-right reveal">
+    <div class="form-box">
+      <div id="formContent">
+        <h2 class="form-heading">Book a consultation</h2>
+        <div class="form-row">
+          <div class="fg"><label>First Name</label><input type="text" id="fname" placeholder="Your name"></div>
+          <div class="fg"><label>Last Name</label><input type="text" id="lname" placeholder="Surname"></div>
+        </div>
+        <div class="fg"><label>Phone / WhatsApp</label><input type="tel" id="fphone" placeholder="+263 77 000 0000"></div>
+        <div class="fg"><label>Email Address</label><input type="email" id="femail" placeholder="your@email.com"></div>
+        <div class="fg">
+          <label>Service Needed</label>
+          <select id="fservice">
+            <option value="">Select a service...</option>
+            <option>IT Issues &amp; Support</option>
+            <option>Marketing &amp; Digital Growth</option>
+            <option>Account Activation &amp; Restore</option>
+            <option>Hacked Account Recovery — Emergency</option>
+            <option>Online Page Management</option>
+            <option>Followers &amp; Likes Boost</option>
+            <option>Multiple Services</option>
+            <option>Not Sure — Need Advice</option>
+          </select>
+        </div>
+        <div class="fg"><label>Describe your situation</label><textarea id="fmessage" placeholder="Tell us what's happening and what you need help with..."></textarea></div>
+        <button class="submit-btn" onclick="handleSubmit()">Send enquiry &nbsp;<i class="fa fa-arrow-right"></i></button>
+        <p class="form-note-text">We respond within 1 hour. For emergencies call or WhatsApp directly.</p>
+      </div>
+      <div class="form-success-box" id="formSuccess">
+        <i class="fa fa-circle-check"></i>
+        <h3>Message received!</h3>
+        <p>Thank you. We'll be in touch shortly.<br>For fastest response, WhatsApp:<br><strong>+263 77 940 5017</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- QUICK CONTACT -->
+<section class="quick">
+  <div class="reveal">
+    <p class="sec-label">Prefer direct contact?</p>
+    <h2 class="sec-title">Reach us <em>directly</em></h2>
+  </div>
+  <div class="quick-grid">
+    <a href="tel:+263779405017" class="qcard reveal">
+      <div class="qcard-ico"><i class="fa fa-phone"></i></div>
+      <div class="qcard-name">Call Us</div>
+      <div class="qcard-val">+263 77 940 5017</div>
+      <div class="qcard-sub">Mon–Sat, 8am–8pm</div>
+    </a>
+    <a href="https://wa.me/263779405017" class="qcard reveal">
+      <div class="qcard-ico"><i class="fab fa-whatsapp"></i></div>
+      <div class="qcard-name">WhatsApp</div>
+      <div class="qcard-val">+263 77 940 5017</div>
+      <div class="qcard-sub">Fastest — any time</div>
+    </a>
+    <a href="mailto:matizawayne@gmail.com" class="qcard reveal">
+      <div class="qcard-ico"><i class="fa fa-envelope"></i></div>
+      <div class="qcard-name">Email</div>
+      <div class="qcard-val">matizawayne@gmail.com</div>
+      <div class="qcard-sub">Response within 4 hours</div>
+    </a>
+  </div>
+</section>
+
+<!-- BOOK A SERVICE -->
+<section class="book-services">
+  <div class="reveal">
+    <p class="sec-label">Instant booking</p>
+    <h2 class="sec-title">Tap a service to <em>book on WhatsApp</em></h2>
+  </div>
+  <div class="book-grid">
+    <a href="https://wa.me/263779405017?text=Hi%2C%20I%20need%20IT%20Support%20help" class="bscard reveal-s">
+      <div class="bscard-img"><img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=500&q=75&fit=crop" alt="IT Support" loading="lazy"></div>
+      <div class="bscard-body"><span class="bscard-ico"><i class="fa fa-laptop-code"></i></span><div class="bscard-name">IT Issues &amp; Support</div><div class="bscard-price">From $15</div><div class="bscard-cta">Book now <i class="fa fa-arrow-right"></i></div></div>
+    </a>
+    <a href="https://wa.me/263779405017?text=Hi%2C%20I%20need%20Marketing%20help" class="bscard reveal-s">
+      <div class="bscard-img"><img src="https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=500&q=75&fit=crop" alt="Marketing" loading="lazy"></div>
+      <div class="bscard-body"><span class="bscard-ico"><i class="fa fa-chart-line"></i></span><div class="bscard-name">Marketing &amp; Growth</div><div class="bscard-price">From $30</div><div class="bscard-cta">Book now <i class="fa fa-arrow-right"></i></div></div>
+    </a>
+    <a href="https://wa.me/263779405017?text=Hi%2C%20I%20need%20Account%20Activation" class="bscard reveal-s">
+      <div class="bscard-img"><img src="https://images.unsplash.com/photo-1555421689-d68471e189f2?w=500&q=75&fit=crop" alt="Account Activation" loading="lazy"></div>
+      <div class="bscard-body"><span class="bscard-ico"><i class="fa fa-unlock"></i></span><div class="bscard-name">Account Activation</div><div class="bscard-price">From $20</div><div class="bscard-cta">Book now <i class="fa fa-arrow-right"></i></div></div>
+    </a>
+    <a href="https://wa.me/263779405017?text=URGENT%3A%20My%20account%20was%20hacked" class="bscard reveal-s">
+      <div class="bscard-img"><img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=500&q=75&fit=crop" alt="Hacked Account" loading="lazy"></div>
+      <div class="bscard-body"><span class="bscard-ico"><i class="fa fa-shield-halved"></i></span><div class="bscard-name">Hacked Account Recovery</div><div class="bscard-price">From $35</div><div class="bscard-cta">Emergency — Book Now <i class="fa fa-arrow-right"></i></div></div>
+    </a>
+    <a href="https://wa.me/263779405017?text=Hi%2C%20I%20need%20Page%20Management" class="bscard reveal-s">
+      <div class="bscard-img"><img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=500&q=75&fit=crop" alt="Page Management" loading="lazy"></div>
+      <div class="bscard-body"><span class="bscard-ico"><i class="fa fa-layer-group"></i></span><div class="bscard-name">Page Management</div><div class="bscard-price">From $80/month</div><div class="bscard-cta">Book now <i class="fa fa-arrow-right"></i></div></div>
+    </a>
+    <a href="https://wa.me/263779405017?text=Hi%2C%20I%20want%20Followers%20and%20Likes" class="bscard reveal-s">
+      <div class="bscard-img"><img src="https://images.unsplash.com/photo-1559526324-593bc073d938?w=500&q=75&fit=crop" alt="Followers and Likes" loading="lazy"></div>
+      <div class="bscard-body"><span class="bscard-ico"><i class="fa fa-users"></i></span><div class="bscard-name">Followers &amp; Likes</div><div class="bscard-price">From $10</div><div class="bscard-cta">Book now <i class="fa fa-arrow-right"></i></div></div>
+    </a>
+  </div>
+</section>
+
+<!-- HOURS -->
+<section class="hours">
+  <div class="hours-inner">
+    <p class="sec-label reveal">When we're available</p>
+    <h2 class="sec-title reveal">Operating <em>hours</em></h2>
+    <div class="hours-grid reveal">
+      <div class="hrow"><span class="hrow-day">Monday</span><span class="hrow-time">8:00am – 8:00pm</span></div>
+      <div class="hrow"><span class="hrow-day">Tuesday</span><span class="hrow-time">8:00am – 8:00pm</span></div>
+      <div class="hrow"><span class="hrow-day">Wednesday</span><span class="hrow-time">8:00am – 8:00pm</span></div>
+      <div class="hrow"><span class="hrow-day">Thursday</span><span class="hrow-time">8:00am – 8:00pm</span></div>
+      <div class="hrow"><span class="hrow-day">Friday</span><span class="hrow-time">8:00am – 8:00pm</span></div>
+      <div class="hrow"><span class="hrow-day">Saturday</span><span class="hrow-time">9:00am – 6:00pm</span></div>
+      <div class="hrow"><span class="hrow-day">Sunday</span><span class="hrow-time">By appointment</span></div>
+      <div class="hrow hl"><span class="hrow-day">Emergencies</span><span class="hrow-time">24 / 7</span></div>
+    </div>
+    <div class="emerg-box reveal">
+      <i class="fa fa-bolt"></i>
+      <p><strong>Emergency support available 24/7.</strong> For urgent situations — hacked accounts, critical IT failures — WhatsApp or call us any time. We respond fast.</p>
+    </div>
+  </div>
+</section>
+
+<!-- IMAGE BANNER -->
+<div class="contact-img-banner">
+  <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1600&q=80&fit=crop" alt="Professional team" loading="lazy">
+  <div class="cib-content">
+    <div class="cib-tag">Confidential · Fast · Professional</div>
+    <h2 class="cib-title">Your problem solved,<br><em>today</em></h2>
+    <div class="cib-btns">
+      <a href="https://wa.me/263779405017" class="cib-wa"><i class="fab fa-whatsapp"></i> WhatsApp Now</a>
+      <a href="tel:+263779405017" class="cib-call"><i class="fa fa-phone"></i> Call Us</a>
+    </div>
+  </div>
+</div>
+
+<!-- GUARANTEES -->
+<section class="guarantees">
+  <div class="reveal">
+    <p class="sec-label">Our promise to you</p>
+    <h2 class="sec-title">Our <em>guarantees</em></h2>
+  </div>
+  <div class="g-grid">
+    <div class="gitem reveal"><div class="gitem-ico"><i class="fa fa-shield-halved"></i></div><div><h3>Satisfaction Guarantee</h3><p>If we can't deliver the promised result, you don't pay. We stand behind every service with full accountability.</p></div></div>
+    <div class="gitem reveal"><div class="gitem-ico"><i class="fa fa-lock"></i></div><div><h3>100% Confidential</h3><p>Your credentials and account details are never shared, stored beyond the service, or disclosed to any third party.</p></div></div>
+    <div class="gitem reveal"><div class="gitem-ico"><i class="fa fa-clock"></i></div><div><h3>Fast Response</h3><p>We respond to all enquiries within 1 hour during business hours. Emergency cases get immediate attention 24/7.</p></div></div>
+    <div class="gitem reveal"><div class="gitem-ico"><i class="fa fa-comments"></i></div><div><h3>Transparent Pricing</h3><p>No hidden fees, no surprises. We give you a clear quote upfront and keep you updated throughout the process.</p></div></div>
+  </div>
+</section>
+
+<!-- LOCATION -->
+<section class="location">
+  <div class="loc-grid">
+    <div class="loc-text reveal">
+      <p class="sec-label">Find us</p>
+      <h2 class="sec-title">Based in <em>Harare</em></h2>
+      <p class="loc-desc">We're based in Harare, Zimbabwe, serving clients across the country and beyond. Most services are delivered remotely — no matter where you are.</p>
+      <div class="loc-details">
+        <div class="loc-detail"><i class="fa fa-location-dot"></i> Harare, Zimbabwe</div>
+        <div class="loc-detail"><i class="fa fa-phone"></i> +263 77 940 5017</div>
+        <div class="loc-detail"><i class="fa fa-envelope"></i> matizawayne@gmail.com</div>
+        <div class="loc-detail"><i class="fab fa-whatsapp"></i> WhatsApp preferred for fastest response</div>
+      </div>
+    </div>
+    <div class="loc-img reveal-s">
+      <img src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=900&q=80&fit=crop" alt="Harare Zimbabwe city" loading="lazy">
+      <div class="loc-badge">
+        <div class="loc-badge-label">Our base</div>
+        <div class="loc-badge-val">Harare, Zimbabwe</div>
+      </div>
+      <a href="https://maps.google.com/?q=Harare,Zimbabwe" target="_blank" class="loc-maps-link"><i class="fa fa-location-dot"></i> Open in Maps</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-logo"><span>miles</span>tech</div>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="services.html">Services</a>
+      <a href="projects.html">Projects</a>
+      <a href="contact.html">Contact</a>
+      <a href="tel:+263779405017">+263 77 940 5017</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>©2026 Miles Tech. All rights reserved.</span>
+    <span>Harare, Zimbabwe</span>
+  </div>
+</footer>
+
+<script>
+// SCROLL REVEAL
+const obs = new IntersectionObserver(es => {
+  es.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, {threshold: 0.1});
+document.querySelectorAll('.reveal, .reveal-s').forEach(r => obs.observe(r));
+
+// DRAWER OPEN / CLOSE
+function toggleDrawer() {
+  const drawer   = document.getElementById('drawer');
+  const backdrop = document.getElementById('drawerBackdrop');
+  const btn      = document.getElementById('menuBtn');
+  const isOpen   = drawer.classList.toggle('open');
+  backdrop.classList.toggle('open', isOpen);
+  btn.classList.toggle('open', isOpen);
+  document.body.style.overflow = isOpen ? 'hidden' : '';
+}
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('drawerBackdrop').classList.remove('open');
+  document.getElementById('menuBtn').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Close drawer on Escape key
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeDrawer(); });
+
+// FORM SUBMIT → WHATSAPP
+function handleSubmit() {
+  const fname   = document.getElementById('fname').value.trim();
+  const phone   = document.getElementById('fphone').value.trim();
+  const service = document.getElementById('fservice').value;
+  const message = document.getElementById('fmessage').value.trim();
+  if (!fname || !phone || !service || !message) {
+    alert('Please fill in all required fields.');
+    return;
+  }
+  const lname = document.getElementById('lname').value.trim();
+  const email = document.getElementById('femail').value.trim();
+  const text  = `Hi Miles Tech!\n\nName: ${fname} ${lname}\nPhone: ${phone}\nEmail: ${email}\nService: ${service}\n\nMessage: ${message}`;
+  document.getElementById('formContent').style.display = 'none';
+  document.getElementById('formSuccess').style.display = 'block';
+  setTimeout(() => { window.open(`https://wa.me/263779405017?text=${encodeURIComponent(text)}`, '_blank'); }, 600);
+}
+</script>
+</body>
+</html>

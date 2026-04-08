@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Miles Tech — Digital Solutions Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--cream:#f5f0eb;--warm:#e8ddd4;--dark:#1a1714;--mid:#4a4440;--accent:#c9a87a;--text:#2d2926;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9000;opacity:0.6;}
+
+/* === MOBILE OVERLAY NAV === */
+.mobile-nav{position:fixed;inset:0;background:var(--dark);z-index:250;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.45s cubic-bezier(0.4,0,0.2,1);}
+.mobile-nav.open{opacity:1;pointer-events:all;}
+.mobile-nav a{font-family:'Cormorant Garamond',serif;font-size:clamp(38px,9vw,60px);font-weight:300;color:rgba(255,255,255,0.2);text-decoration:none;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.07);width:75%;text-align:center;transform:translateY(28px);opacity:0;transition:color 0.3s,transform 0.45s cubic-bezier(0.4,0,0.2,1),opacity 0.45s cubic-bezier(0.4,0,0.2,1);}
+.mobile-nav.open a{color:rgba(255,255,255,0.85);transform:translateY(0);opacity:1;}
+.mobile-nav.open a:nth-child(1){transition-delay:0.08s;}
+.mobile-nav.open a:nth-child(2){transition-delay:0.15s;}
+.mobile-nav.open a:nth-child(3){transition-delay:0.22s;}
+.mobile-nav.open a:nth-child(4){transition-delay:0.29s;}
+.mobile-nav a:hover{color:#fff;}
+.mn-footer{display:flex;flex-direction:column;gap:10px;align-items:center;margin-top:36px;opacity:0;transition:opacity 0.4s 0.38s;}
+.mobile-nav.open .mn-footer{opacity:1;}
+.mn-footer a{font-family:'DM Sans',sans-serif;font-size:13px;color:rgba(255,255,255,0.35);text-decoration:none;font-weight:300;border:none;width:auto;padding:3px 0;transform:none;}
+.mn-footer a:hover{color:var(--accent);}
+
+/* === NAV === */
+nav{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:24px 48px;z-index:200;transition:background 0.4s,backdrop-filter 0.4s;}
+nav.scrolled{background:rgba(245,240,235,0.95);backdrop-filter:blur(14px);}
+.logo{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:400;letter-spacing:0.02em;color:var(--dark);text-decoration:none;}
+.logo span{font-weight:300;color:var(--mid);}
+.nav-links{display:flex;gap:36px;align-items:center;}
+.nav-links a{font-size:13px;font-weight:400;color:var(--dark);text-decoration:none;letter-spacing:0.04em;transition:opacity 0.3s;}
+.nav-links a:hover{opacity:0.5;}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.nav-cta-btn{width:36px;height:36px;border-radius:50%;background:var(--dark);display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;text-decoration:none;transition:background 0.3s;}
+.nav-cta-btn:hover{background:var(--accent);}
+.nav-cta-btn i{color:#fff;font-size:12px;}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:6px;z-index:300;}
+.hamburger span{display:block;width:22px;height:2px;background:var(--dark);border-radius:2px;transition:all 0.35s cubic-bezier(0.4,0,0.2,1);transform-origin:center;}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+/* === HERO (UNTOUCHED) === */
+.hero{position:relative;height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.hero-bg{position:absolute;inset:0;background:linear-gradient(135deg,#e8ddd4 0%,#d4c5b5 30%,#c5b8ab 60%,#b8a898 100%);z-index:0;}
+.hero-bg::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 60% 40%,rgba(201,168,122,0.2) 0%,transparent 70%);}
+.arch{position:absolute;border-radius:50% 50% 0 0;border:1px solid rgba(255,255,255,0.3);}
+.arch-1{width:320px;height:400px;left:-80px;bottom:0;background:linear-gradient(180deg,rgba(255,255,255,0.12),rgba(255,255,255,0.04));}
+.arch-2{width:220px;height:280px;left:-20px;bottom:0;background:rgba(255,255,255,0.06);}
+.arch-3{width:280px;height:360px;right:5%;bottom:0;background:linear-gradient(180deg,rgba(255,255,255,0.08),transparent);}
+.hero-orb{position:absolute;right:25%;top:30%;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(255,255,255,0.9),rgba(201,168,122,0.6),rgba(180,140,100,0.3));box-shadow:0 0 40px rgba(201,168,122,0.4);animation:float 6s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-20px);}}
+.hero-content{position:relative;z-index:2;text-align:center;padding:0 20px;}
+.hero-eyebrow{font-size:11px;font-weight:400;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);margin-bottom:20px;opacity:0;animation:fadeUp 1s 0.3s forwards;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(56px,8vw,110px);font-weight:300;line-height:0.95;color:var(--dark);margin-bottom:32px;opacity:0;animation:fadeUp 1s 0.5s forwards;}
+.hero-title em{font-style:italic;font-weight:300;}
+.hero-cta{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;border:1px solid var(--dark);border-radius:100px;font-size:13px;font-weight:400;letter-spacing:0.04em;color:var(--dark);text-decoration:none;background:rgba(255,255,255,0.3);backdrop-filter:blur(8px);transition:all 0.3s;opacity:0;animation:fadeUp 1s 0.8s forwards;}
+.hero-cta:hover{background:var(--dark);color:#fff;}
+.hero-cta i{font-size:10px;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+
+/* === SECTIONS === */
+section{padding:120px 48px;}
+.section-label{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);margin-bottom:16px;}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(38px,5vw,64px);font-weight:300;line-height:1.1;color:var(--dark);}
+.section-title em{font-style:italic;}
+
+/* === INTRO === */
+.intro{background:var(--dark);color:#fff;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+.intro-left .section-label{color:rgba(255,255,255,0.4);}
+.intro-left .section-title{color:#fff;}
+.intro-right p{font-size:16px;font-weight:300;line-height:1.8;color:rgba(255,255,255,0.7);margin-bottom:20px;}
+.intro-stats{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:40px;}
+.stat{border-top:1px solid rgba(255,255,255,0.15);padding-top:20px;}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:300;color:var(--accent);line-height:1;}
+.stat-label{font-size:12px;color:rgba(255,255,255,0.5);margin-top:6px;letter-spacing:0.06em;}
+
+/* === INTRO IMAGE STRIP === */
+.intro-img-strip{background:var(--dark);padding:0 48px 80px;display:grid;grid-template-columns:2fr 1fr 1fr;gap:3px;}
+.istrip-item{position:relative;overflow:hidden;cursor:pointer;}
+.istrip-item img{width:100%;height:320px;object-fit:cover;display:block;transition:transform 0.75s cubic-bezier(0.4,0,0.2,1),filter 0.5s;filter:brightness(0.65) saturate(0.75);}
+.istrip-item:hover img{transform:scale(1.07);filter:brightness(0.4) saturate(0.6);}
+.istrip-overlay{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:28px;background:linear-gradient(to top,rgba(26,23,20,0.9) 0%,rgba(26,23,20,0.1) 55%,transparent 100%);}
+.istrip-tag{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;}
+.istrip-title{font-family:'Cormorant Garamond',serif;font-size:clamp(16px,2vw,22px);font-style:italic;font-weight:300;color:#fff;line-height:1.3;}
+.istrip-arrow{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,0.4);margin-top:10px;transition:color 0.3s;opacity:0;transform:translateY(6px);transition:all 0.35s;}
+.istrip-item:hover .istrip-arrow{opacity:1;transform:translateY(0);color:var(--accent);}
+
+/* === SERVICES === */
+.services{background:var(--cream);}
+.services-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:64px;}
+.services-header a{font-size:13px;color:var(--mid);text-decoration:none;border-bottom:1px solid var(--mid);padding-bottom:2px;transition:color 0.3s;}
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;}
+.service-card{background:var(--warm);padding:0 0 36px;transition:all 0.4s;cursor:pointer;position:relative;overflow:hidden;text-decoration:none;color:inherit;display:block;}
+.service-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:0;background:var(--dark);transition:height 0.45s ease;z-index:1;}
+.service-card:hover::before{height:100%;}
+/* image top */
+.sc-img{position:relative;overflow:hidden;height:190px;}
+.sc-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.7s cubic-bezier(0.4,0,0.2,1),filter 0.5s;filter:brightness(0.78) saturate(0.75);}
+.service-card:hover .sc-img img{transform:scale(1.09);filter:brightness(0.35) saturate(0.5);}
+.sc-img::after{content:'';position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(to top,var(--warm),transparent);transition:background 0.45s;}
+.service-card:hover .sc-img::after{background:linear-gradient(to top,var(--dark),transparent);}
+.sc-body{padding:32px 32px 0;position:relative;z-index:2;}
+.sc-num{position:absolute;top:16px;right:20px;font-family:'Cormorant Garamond',serif;font-size:44px;font-weight:300;color:rgba(0,0,0,0.06);line-height:1;transition:color 0.4s;z-index:2;}
+.service-card:hover .sc-num{color:rgba(255,255,255,0.07);}
+.sc-icon{font-size:26px;color:var(--accent);margin-bottom:18px;display:block;transition:color 0.4s;}
+.sc-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;margin-bottom:12px;line-height:1.2;transition:color 0.4s;color:var(--dark);}
+.sc-desc{font-size:13px;font-weight:300;line-height:1.7;color:var(--mid);margin-bottom:24px;transition:color 0.4s;}
+.sc-arrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:0.06em;border-bottom:1px solid var(--mid);padding-bottom:4px;transition:all 0.4s;color:var(--dark);}
+.service-card:hover .sc-icon,.service-card:hover .sc-title,.service-card:hover .sc-desc,.service-card:hover .sc-arrow{color:#fff!important;}
+.service-card:hover .sc-arrow{border-color:rgba(255,255,255,0.3)!important;}
+
+/* === MARQUEE === */
+.marquee-section{background:var(--dark);padding:32px 0;overflow:hidden;}
+.marquee-track{display:flex;gap:64px;animation:marquee 20s linear infinite;width:max-content;}
+@keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.marquee-item{font-family:'Cormorant Garamond',serif;font-size:22px;font-style:italic;font-weight:300;color:rgba(255,255,255,0.3);white-space:nowrap;display:flex;align-items:center;gap:64px;}
+.marquee-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);}
+
+/* === PROCESS === */
+.process{background:linear-gradient(135deg,#e0d5c8,#cfc4b6);text-align:center;}
+.process-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-top:64px;}
+.process-step{background:rgba(255,255,255,0.4);backdrop-filter:blur(10px);padding:40px 28px;transition:transform 0.3s;}
+.process-step:hover{transform:translateY(-8px);}
+.step-num{font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:300;color:var(--accent);line-height:1;margin-bottom:20px;}
+.step-title{font-size:15px;font-weight:500;margin-bottom:10px;}
+.step-desc{font-size:13px;font-weight:300;line-height:1.7;color:var(--mid);}
+
+/* === FULL-WIDTH IMAGE BANNER === */
+.img-banner{position:relative;overflow:hidden;height:500px;cursor:pointer;}
+.img-banner img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 1.2s cubic-bezier(0.4,0,0.2,1),filter 0.7s;filter:brightness(0.4) saturate(0.7);}
+.img-banner:hover img{transform:scale(1.04);filter:brightness(0.3);}
+.img-banner-content{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px;}
+.img-banner-tag{font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--accent);margin-bottom:20px;}
+.img-banner-title{font-family:'Cormorant Garamond',serif;font-size:clamp(42px,7vw,88px);font-weight:300;color:#fff;line-height:0.95;margin-bottom:32px;}
+.img-banner-title em{font-style:italic;}
+.img-banner-btn{display:inline-flex;align-items:center;gap:10px;padding:15px 36px;border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:100px;font-size:13px;text-decoration:none;background:rgba(255,255,255,0.06);backdrop-filter:blur(10px);transition:all 0.35s;}
+.img-banner:hover .img-banner-btn{background:var(--accent);border-color:var(--accent);}
+
+/* === WHY US === */
+.why{background:var(--cream);}
+.why-header{margin-bottom:56px;}
+/* image feature pair */
+.why-img-row{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-bottom:3px;}
+.why-feat{position:relative;overflow:hidden;height:400px;cursor:pointer;}
+.why-feat img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.8s cubic-bezier(0.4,0,0.2,1),filter 0.6s;filter:brightness(0.55) saturate(0.7);}
+.why-feat:hover img{transform:scale(1.06);filter:brightness(0.35);}
+.why-feat-overlay{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:36px;background:linear-gradient(to top,rgba(26,23,20,0.88) 0%,rgba(26,23,20,0.15) 55%,transparent 100%);}
+.why-feat-tag{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+.why-feat-title{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,3vw,34px);font-weight:300;font-style:italic;color:#fff;line-height:1.2;}
+.why-feat-sub{font-size:13px;color:rgba(255,255,255,0.55);margin-top:8px;font-weight:300;}
+.why-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;}
+.why-item{background:var(--warm);padding:48px 40px;display:flex;gap:24px;align-items:flex-start;}
+.why-icon{width:48px;height:48px;flex-shrink:0;background:var(--dark);border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.why-icon i{color:var(--accent);font-size:18px;}
+.why-text h3{font-size:17px;font-weight:500;margin-bottom:10px;}
+.why-text p{font-size:13px;font-weight:300;line-height:1.7;color:var(--mid);}
+
+/* === TESTIMONIALS === */
+.testimonials{background:var(--dark);text-align:center;}
+.testimonials .section-label{color:rgba(255,255,255,0.4);}
+.testimonials .section-title{color:#fff;margin-bottom:64px;}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;}
+.testi-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);padding:40px 32px;text-align:left;}
+.testi-stars{color:var(--accent);font-size:12px;margin-bottom:20px;letter-spacing:4px;}
+.testi-quote{font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;font-weight:300;color:rgba(255,255,255,0.85);line-height:1.6;margin-bottom:28px;}
+.testi-name{font-size:13px;font-weight:500;color:#fff;margin-bottom:4px;}
+.testi-role{font-size:12px;color:rgba(255,255,255,0.4);}
+
+/* === PRICING === */
+.pricing{background:var(--warm);}
+.pricing-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:48px;}
+.pricing-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;}
+.pricing-card{background:var(--cream);padding:48px 36px;position:relative;transition:transform 0.3s;}
+.pricing-card:hover{transform:translateY(-6px);}
+.pricing-card.featured{background:var(--dark);color:#fff;}
+.pricing-badge{position:absolute;top:24px;right:24px;background:var(--accent);color:#fff;font-size:10px;letter-spacing:0.1em;padding:4px 12px;border-radius:100px;}
+.price-tier{font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid);margin-bottom:20px;}
+.pricing-card.featured .price-tier{color:rgba(255,255,255,0.5);}
+.price-val{font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:300;line-height:1;color:var(--dark);margin-bottom:8px;}
+.pricing-card.featured .price-val{color:#fff;}
+.price-note{font-size:12px;color:var(--mid);margin-bottom:32px;}
+.pricing-card.featured .price-note{color:rgba(255,255,255,0.4);}
+.price-features{list-style:none;margin-bottom:36px;}
+.price-features li{font-size:13px;font-weight:300;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.08);display:flex;gap:10px;align-items:center;}
+.pricing-card.featured .price-features li{border-color:rgba(255,255,255,0.1);color:rgba(255,255,255,0.8);}
+.price-features li i{color:var(--accent);font-size:11px;}
+.price-btn{display:block;text-align:center;padding:14px;border:1px solid var(--dark);border-radius:100px;font-size:13px;font-weight:400;text-decoration:none;color:var(--dark);transition:all 0.3s;}
+.pricing-card.featured .price-btn{border-color:#fff;color:#fff;background:rgba(255,255,255,0.1);}
+.price-btn:hover{background:var(--dark);color:#fff;}
+.pricing-card.featured .price-btn:hover{background:#fff;color:var(--dark);}
+
+/* === CONTACT STRIP === */
+.contact-strip{background:var(--cream);padding:80px 48px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(0,0,0,0.1);}
+.cs-left{max-width:500px;}
+.cs-title{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,4vw,56px);font-weight:300;line-height:1.1;margin-bottom:16px;}
+.cs-title em{font-style:italic;}
+.cs-sub{font-size:14px;font-weight:300;color:var(--mid);line-height:1.7;}
+.cs-right{display:flex;flex-direction:column;gap:16px;align-items:flex-end;}
+.cs-contact{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--dark);text-decoration:none;}
+.cs-ico{width:40px;height:40px;background:var(--dark);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:14px;flex-shrink:0;}
+.book-btn{display:inline-flex;align-items:center;gap:10px;margin-top:16px;padding:16px 36px;background:var(--dark);color:#fff;border-radius:100px;font-size:14px;font-weight:400;text-decoration:none;transition:all 0.3s;}
+.book-btn:hover{background:var(--accent);}
+
+footer{background:var(--dark);padding:60px 48px 36px;}
+.footer-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:48px;}
+.footer-logo{font-family:'DM Sans',sans-serif;font-size:22px;font-weight:300;color:#fff;}
+.footer-logo span{font-weight:400;}
+.footer-links{display:flex;gap:32px;flex-wrap:wrap;}
+.footer-links a{font-size:13px;color:rgba(255,255,255,0.4);text-decoration:none;transition:color 0.3s;}
+.footer-links a:hover{color:#fff;}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.08);padding-top:24px;display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,0.3);}
+
+/* ANIMATIONS */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 0.8s ease,transform 0.8s ease;}
+.reveal.visible{opacity:1;transform:none;}
+.reveal-l{opacity:0;transform:translateX(-40px);transition:opacity 0.8s ease,transform 0.8s ease;}
+.reveal-l.visible{opacity:1;transform:none;}
+.reveal-r{opacity:0;transform:translateX(40px);transition:opacity 0.8s ease,transform 0.8s ease;}
+.reveal-r.visible{opacity:1;transform:none;}
+.reveal-s{opacity:0;transform:scale(0.94);transition:opacity 0.8s ease,transform 0.8s ease;}
+.reveal-s.visible{opacity:1;transform:scale(1);}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  nav{padding:20px 24px;}
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+  section{padding:80px 24px;}
+  .intro{grid-template-columns:1fr;gap:40px;}
+  .intro-img-strip{padding:0 24px 60px;grid-template-columns:1fr 1fr;}
+  .istrip-item:first-child{grid-column:span 2;}
+  .services-grid{grid-template-columns:1fr;}
+  .process-steps{grid-template-columns:1fr 1fr;}
+  .why-img-row{grid-template-columns:1fr;}
+  .why-grid{grid-template-columns:1fr;}
+  .testi-grid{grid-template-columns:1fr;}
+  .pricing-cards{grid-template-columns:1fr;}
+  .contact-strip{flex-direction:column;gap:40px;align-items:flex-start;}
+  .cs-right{align-items:flex-start;}
+  .footer-top{flex-direction:column;gap:24px;}
+  .footer-bottom{flex-direction:column;gap:8px;}
+  .services-header{flex-direction:column;align-items:flex-start;gap:16px;}
+  .pricing-header{flex-direction:column;align-items:flex-start;gap:16px;}
+  .img-banner{height:340px;}
+  .why-feat{height:260px;}
+}
+@media(max-width:580px){
+  .intro-img-strip{grid-template-columns:1fr;}
+  .istrip-item:first-child{grid-column:span 1;}
+  .process-steps{grid-template-columns:1fr;}
+  .intro-stats{grid-template-columns:1fr 1fr;}
+}
+
+
+
+
+
+.mobile-nav-close {
+  position: absolute;
+  top: 28px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 260;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mobile-nav-close span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: white;
+  border-radius: 2px;
+  position: absolute;
+}
+.mobile-nav-close span:first-child {
+  transform: rotate(45deg);
+}
+.mobile-nav-close span:last-child {
+  transform: rotate(-45deg);
+}
+</style>
+</head>
+<body>
+
+<!-- MOBILE NAV OVERLAY -->
+<div class="mobile-nav" id="mobileNav">
+  <button class="mobile-nav-close" onclick="closeMobNav()"><span></span><span></span></button>
+  <a href="index.html" onclick="closeMobNav()">Home</a>
+  <a href="services.html" onclick="closeMobNav()">Services</a>
+  <a href="projects.html" onclick="closeMobNav()">Projects</a>
+  <a href="contact.html" onclick="closeMobNav()">Contact</a>
+  <div class="mn-footer">
+    <a href="tel:+263779405017"><i class="fa fa-phone"></i>&nbsp; +263 77 940 5017</a>
+    <a href="mailto:matizawayne@gmail.com"><i class="fa fa-envelope"></i>&nbsp; matizawayne@gmail.com</a>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="index.html" class="logo">miles<span>tech</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="services.html">Services</a>
+    <a href="projects.html">Projects</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <div class="nav-right">
+    <a href="contact.html" class="nav-cta-btn" id="desktopCta"><i class="fa fa-arrow-right"></i></a>
+    <button class="hamburger" id="hamBtn" onclick="toggleMobNav()" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO (NO CHANGES) -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="arch arch-1"></div>
+  <div class="arch arch-2"></div>
+  <div class="arch arch-3"></div>
+  <div class="hero-orb"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">A Digital Solutions Studio</p>
+    <h1 class="hero-title"><em>Solving the</em><br>Unexpected</h1>
+    <a href="services.html" class="hero-cta">View our services <i class="fa fa-arrow-down"></i></a>
+  </div>
+</section>
+
+<!-- INTRO -->
+<section class="intro">
+  <div class="intro-left reveal-l">
+    <p class="section-label">About Miles Tech</p>
+    <h2 class="section-title">We fix, grow <em>& protect</em> your digital presence</h2>
+  </div>
+  <div class="intro-right reveal-r">
+    <p>Miles Tech is a Zimbabwean digital solutions studio specialising in IT support, social media growth, account recovery, and online reputation management.</p>
+    <p>From recovering a hacked account to growing your brand to thousands of followers — we handle what others can't.</p>
+    <div class="intro-stats">
+      <div class="stat"><div class="stat-num">500+</div><div class="stat-label">Accounts Recovered</div></div>
+      <div class="stat"><div class="stat-num">98%</div><div class="stat-label">Success Rate</div></div>
+      <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">Emergency Support</div></div>
+      <div class="stat"><div class="stat-num">5★</div><div class="stat-label">Client Satisfaction</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- INTRO IMAGE STRIP -->
+<div class="intro-img-strip">
+  <div class="istrip-item reveal-s">
+    <img src="work.jpg" alt="Professional working on technology" loading="lazy">
+    <div class="istrip-overlay">
+      <div class="istrip-tag">Our Expertise</div>
+      <div class="istrip-title">Professional digital solutions, delivered fast</div>
+      <div class="istrip-arrow">Explore services <i class="fa fa-arrow-right"></i></div>
+    </div>
+  </div>
+  <div class="istrip-item reveal-s">
+    <img src="https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=600&q=80&fit=crop" alt="Social media growth on phone" loading="lazy">
+    <div class="istrip-overlay">
+      <div class="istrip-tag">Social Growth</div>
+      <div class="istrip-title">Real followers, real results</div>
+      <div class="istrip-arrow">View service <i class="fa fa-arrow-right"></i></div>
+    </div>
+  </div>
+  <div class="istrip-item reveal-s">
+    <img src="https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=600&q=80&fit=crop" alt="Cybersecurity and digital protection" loading="lazy">
+    <div class="istrip-overlay">
+      <div class="istrip-tag">Account Security</div>
+      <div class="istrip-title">Hacked accounts recovered</div>
+      <div class="istrip-arrow">Get help <i class="fa fa-arrow-right"></i></div>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services">
+  <div class="services-header reveal">
+    <div>
+      <p class="section-label">What we do</p>
+      <h2 class="section-title">Our <em>core</em> services</h2>
+    </div>
+    <a href="services.html">All services</a>
+  </div>
+  <div class="services-grid">
+    <a class="service-card reveal" href="services.html#it">
+      <div class="sc-img"><img src="likes.avif.crdownload" alt="IT Support circuit board" loading="lazy"></div>
+      <div class="sc-body">
+        <div class="sc-num">01</div>
+        <span class="sc-icon"><i class="fa fa-laptop-code"></i></span>
+        <h3 class="sc-title">IT Issues & Support</h3>
+        <p class="sc-desc">Devices, networks, software crashes — we diagnose and fix fast, remotely or in-person.</p>
+        <span class="sc-arrow">Learn more <i class="fa fa-arrow-right"></i></span>
+      </div>
+    </a>
+    <a class="service-card reveal" href="services.html#marketing">
+      <div class="sc-img"><img src="likes.avif.crdownload" alt="Digital marketing analytics" loading="lazy"></div>
+      <div class="sc-body">
+        <div class="sc-num">02</div>
+        <span class="sc-icon"><i class="fa fa-chart-line"></i></span>
+        <h3 class="sc-title">Marketing & Growth</h3>
+        <p class="sc-desc">Campaigns, ads, and content strategies that drive real results for your business.</p>
+        <span class="sc-arrow">Learn more <i class="fa fa-arrow-right"></i></span>
+      </div>
+    </a>
+    <a class="service-card reveal" href="services.html#account">
+      <div class="sc-img"><img src="likes.avif.crdownload" alt="Account login security" loading="lazy"></div>
+      <div class="sc-body">
+        <div class="sc-num">03</div>
+        <span class="sc-icon"><i class="fa fa-unlock"></i></span>
+        <h3 class="sc-title">Account Activation</h3>
+        <p class="sc-desc">Get locked, banned, or suspended accounts back online with our proven process.</p>
+        <span class="sc-arrow">Learn more <i class="fa fa-arrow-right"></i></span>
+      </div>
+    </a>
+    <a class="service-card reveal" href="services.html#hacked">
+      <div class="sc-img"><img src="likes.avif.crdownload" alt="Cybersecurity protection" loading="lazy"></div>
+      <div class="sc-body">
+        <div class="sc-num">04</div>
+        <span class="sc-icon"><i class="fa fa-shield-halved"></i></span>
+        <h3 class="sc-title">Hacked Account Recovery</h3>
+        <p class="sc-desc">Secure and restore compromised accounts across all platforms — email, social, business.</p>
+        <span class="sc-arrow">Learn more <i class="fa fa-arrow-right"></i></span>
+      </div>
+    </a>
+    <a class="service-card reveal" href="services.html#pages">
+      <div class="sc-img"><img src="likes.avif.crdownload" alt="Social media management" loading="lazy"></div>
+      <div class="sc-body">
+        <div class="sc-num">05</div>
+        <span class="sc-icon"><i class="fa fa-layer-group"></i></span>
+        <h3 class="sc-title">Page Management</h3>
+        <p class="sc-desc">We manage your social pages, engage your audience, and keep your brand consistent.</p>
+        <span class="sc-arrow">Learn more <i class="fa fa-arrow-right"></i></span>
+      </div>
+    </a>
+    <a class="service-card reveal" href="services.html#growth">
+      <div class="sc-img"><img src="likes.avif.crdownload" alt="Social media followers growth" loading="lazy"></div>
+      <div class="sc-body">
+        <div class="sc-num">06</div>
+        <span class="sc-icon"><i class="fa fa-users"></i></span>
+        <h3 class="sc-title">Likes & Followers</h3>
+        <p class="sc-desc">Real engagement boosts — followers, likes, and views to accelerate your social credibility.</p>
+        <span class="sc-arrow">Learn more <i class="fa fa-arrow-right"></i></span>
+      </div>
+    </a>
+  </div>
+</section>
+
+
+
+<!-- PROCESS -->
+<section class="process">
+  <div class="reveal">
+    <p class="section-label">How it works</p>
+    <h2 class="section-title">Simple process, <em>real results</em></h2>
+  </div>
+  <div class="process-steps">
+    <div class="process-step reveal"><div class="step-num">01</div><h3 class="step-title">Book a Consultation</h3><p class="step-desc">Reach out via phone, WhatsApp or email. Tell us your problem and we respond within the hour.</p></div>
+    <div class="process-step reveal"><div class="step-num">02</div><h3 class="step-title">We Assess & Quote</h3><p class="step-desc">Our team evaluates your situation and gives you a clear, transparent quote with no hidden fees.</p></div>
+    <div class="process-step reveal"><div class="step-num">03</div><h3 class="step-title">We Get to Work</h3><p class="step-desc">We handle everything end-to-end while keeping you updated every step of the way.</p></div>
+    <div class="process-step reveal"><div class="step-num">04</div><h3 class="step-title">Delivered & Guaranteed</h3><p class="step-desc">You receive the results. We back our work with a satisfaction guarantee on every service.</p></div>
+  </div>
+</section>
+
+<!-- FULL-WIDTH IMAGE BANNER -->
+<div class="img-banner">
+  <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1600&q=80&fit=crop" alt="Professional team collaborating" loading="lazy">
+  <div class="img-banner-content">
+    <div class="img-banner-tag">500+ clients helped across Zimbabwe & beyond</div>
+    <h2 class="img-banner-title">Your success is<br><em>our business</em></h2>
+    <a href="projects.html" class="img-banner-btn">See our work <i class="fa fa-arrow-right"></i></a>
+  </div>
+</div>
+
+<!-- WHY US -->
+<section class="why">
+  <div class="why-header reveal">
+    <p class="section-label">Why Miles Tech</p>
+    <h2 class="section-title">Built different, <em>delivering more</em></h2>
+  </div>
+  <div class="why-img-row">
+    <div class="why-feat reveal-s">
+      <img src="proffessionals.jpg" alt="Tech professional expert" loading="lazy">
+      <div class="why-feat-overlay">
+        <div class="why-feat-tag">Our Team</div>
+        <div class="why-feat-title">Experienced professionals who get things done</div>
+        <div class="why-feat-sub">Fast, discreet, results-driven — every time.</div>
+      </div>
+    </div>
+    <div class="why-feat reveal-s">
+      <img src="deliver.jpg" alt="Client satisfaction support" loading="lazy">
+      <div class="why-feat-overlay">
+        <div class="why-feat-tag">Our Guarantee</div>
+        <div class="why-feat-title">If we can't deliver, you don't pay</div>
+        <div class="why-feat-sub">100% satisfaction guaranteed on every service.</div>
+      </div>
+    </div>
+  </div>
+  <div class="why-grid">
+    <div class="why-item reveal"><div class="why-icon"><i class="fa fa-bolt"></i></div><div class="why-text"><h3>Fast Turnaround</h3><p>Most issues resolved within 24–48 hours. Emergency support available around the clock for critical situations.</p></div></div>
+    <div class="why-item reveal"><div class="why-icon"><i class="fa fa-lock"></i></div><div class="why-text"><h3>100% Confidential</h3><p>Your account details, credentials and business data are handled with strict confidentiality and never shared.</p></div></div>
+    <div class="why-item reveal"><div class="why-icon"><i class="fa fa-star"></i></div><div class="why-text"><h3>Proven Expertise</h3><p>Years of experience recovering accounts, managing pages, and solving complex digital problems across all platforms.</p></div></div>
+    <div class="why-item reveal"><div class="why-icon"><i class="fa fa-handshake"></i></div><div class="why-text"><h3>Satisfaction Guaranteed</h3><p>We don't stop until the job is done right. If we can't deliver, you don't pay. Simple as that.</p></div></div>
+    <div class="why-item reveal"><div class="why-icon"><i class="fa fa-globe"></i></div><div class="why-text"><h3>All Platforms Covered</h3><p>Facebook, Instagram, TikTok, Twitter/X, WhatsApp Business, Google — we work across every major platform.</p></div></div>
+    <div class="why-item reveal"><div class="why-icon"><i class="fa fa-comments"></i></div><div class="why-text"><h3>Clear Communication</h3><p>No jargon, no confusion. We explain exactly what we're doing and keep you in the loop at all times.</p></div></div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <p class="section-label reveal">Client feedback</p>
+  <h2 class="section-title reveal">What our clients <em>say</em></h2>
+  <div class="testi-grid">
+    <div class="testi-card reveal"><div class="testi-stars">★★★★★</div><p class="testi-quote">"My Instagram business account was hacked on a Saturday morning. Miles Tech had it back by Sunday night. I couldn't believe it."</p><div class="testi-name">Tariro M.</div><div class="testi-role">Small Business Owner, Harare</div></div>
+    <div class="testi-card reveal"><div class="testi-stars">★★★★★</div><p class="testi-quote">"They grew my Facebook page from 200 to over 5,000 followers in three weeks. My sales have never been better."</p><div class="testi-name">Blessing K.</div><div class="testi-role">Online Retailer, Bulawayo</div></div>
+    <div class="testi-card reveal"><div class="testi-stars">★★★★★</div><p class="testi-quote">"Professional, fast and honest. They fixed my laptop and set up my entire network. Worth every cent."</p><div class="testi-name">Farai N.</div><div class="testi-role">Entrepreneur, Harare</div></div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing">
+  <div class="pricing-header reveal">
+    <div><p class="section-label">Transparent pricing</p><h2 class="section-title">Simple, <em>honest</em> rates</h2></div>
+    <a href="contact.html" style="font-size:13px;color:var(--mid);text-decoration:none;border-bottom:1px solid var(--mid);padding-bottom:2px;">Custom quote →</a>
+  </div>
+  <div class="pricing-cards">
+    <div class="pricing-card reveal"><div class="price-tier">Essential</div><div class="price-val">$15</div><div class="price-note">Starting from — per service</div><ul class="price-features"><li><i class="fa fa-check"></i> Basic IT support</li><li><i class="fa fa-check"></i> Account activation</li><li><i class="fa fa-check"></i> 500 followers boost</li><li><i class="fa fa-check"></i> Email support</li></ul><a href="contact.html" class="price-btn">Get started</a></div>
+    <div class="pricing-card featured reveal"><div class="pricing-badge">Popular</div><div class="price-tier">Professional</div><div class="price-val">$45</div><div class="price-note">Starting from — per service</div><ul class="price-features"><li><i class="fa fa-check"></i> Hacked account recovery</li><li><i class="fa fa-check"></i> Full page management</li><li><i class="fa fa-check"></i> 2,000+ followers boost</li><li><i class="fa fa-check"></i> Priority support</li><li><i class="fa fa-check"></i> Marketing campaigns</li></ul><a href="contact.html" class="price-btn">Book now</a></div>
+    <div class="pricing-card reveal"><div class="price-tier">Enterprise</div><div class="price-val">Custom</div><div class="price-note">Tailored to your needs</div><ul class="price-features"><li><i class="fa fa-check"></i> All services bundled</li><li><i class="fa fa-check"></i> Dedicated account manager</li><li><i class="fa fa-check"></i> 24/7 emergency hotline</li><li><i class="fa fa-check"></i> Monthly reporting</li></ul><a href="contact.html" class="price-btn">Contact us</a></div>
+  </div>
+</section>
+
+<!-- CONTACT STRIP -->
+<div class="contact-strip">
+  <div class="cs-left reveal">
+    <h2 class="cs-title"><em>Ready to get</em><br>started today?</h2>
+    <p class="cs-sub">Reach out via WhatsApp, call, or email. We respond fast — often within the hour.</p>
+    <a href="contact.html" class="book-btn">Book a consultation <i class="fa fa-arrow-right"></i></a>
+  </div>
+  <div class="cs-right reveal">
+    <a href="tel:+263779405017" class="cs-contact"><div class="cs-ico"><i class="fa fa-phone"></i></div>+263 77 940 5017</a>
+    <a href="mailto:matizawayne@gmail.com" class="cs-contact"><div class="cs-ico"><i class="fa fa-envelope"></i></div>matizawayne@gmail.com</a>
+    <a href="https://wa.me/263779405017" class="cs-contact"><div class="cs-ico"><i class="fab fa-whatsapp"></i></div>WhatsApp us now</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-logo"><span>miles</span>tech</div>
+    <div class="footer-links"><a href="index.html">Home</a><a href="services.html">Services</a><a href="projects.html">Projects</a><a href="contact.html">Contact</a><a href="tel:+263779405017">+263 77 940 5017</a></div>
+  </div>
+  <div class="footer-bottom"><span>©2026 Miles Tech. All rights reserved.</span><span>Harare, Zimbabwe</span></div>
+</footer>
+
+<script>
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.1});
+document.querySelectorAll('.reveal,.reveal-l,.reveal-r,.reveal-s').forEach(r=>obs.observe(r));
+window.addEventListener('scroll',()=>{document.getElementById('mainNav').classList.toggle('scrolled',scrollY>60);});
+function toggleMobNav(){
+  const n=document.getElementById('mobileNav'),h=document.getElementById('hamBtn');
+  n.classList.add('open');
+  h.style.opacity='0';
+  h.style.pointerEvents='none';
+  document.body.style.overflow='hidden';
+}
+function closeMobNav(){
+  const n=document.getElementById('mobileNav'),h=document.getElementById('hamBtn');
+  n.classList.remove('open');
+  h.style.opacity='';
+  h.style.pointerEvents='';
+  document.body.style.overflow='';
+}
+</script>
+</body>
+</html>
