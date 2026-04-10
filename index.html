@@ -19,15 +19,20 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .mobile-nav.open{opacity:1;pointer-events:all;}
 .mobile-nav a{font-family:'Cormorant Garamond',serif;font-size:clamp(38px,9vw,60px);font-weight:300;color:rgba(255,255,255,0.2);text-decoration:none;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.07);width:75%;text-align:center;transform:translateY(28px);opacity:0;transition:color 0.3s,transform 0.45s cubic-bezier(0.4,0,0.2,1),opacity 0.45s cubic-bezier(0.4,0,0.2,1);}
 .mobile-nav.open a{color:rgba(255,255,255,0.85);transform:translateY(0);opacity:1;}
-.mobile-nav.open a:nth-child(1){transition-delay:0.08s;}
-.mobile-nav.open a:nth-child(2){transition-delay:0.15s;}
-.mobile-nav.open a:nth-child(3){transition-delay:0.22s;}
-.mobile-nav.open a:nth-child(4){transition-delay:0.29s;}
+.mobile-nav.open a:nth-child(2){transition-delay:0.08s;}
+.mobile-nav.open a:nth-child(3){transition-delay:0.15s;}
+.mobile-nav.open a:nth-child(4){transition-delay:0.22s;}
+.mobile-nav.open a:nth-child(5){transition-delay:0.29s;}
+.mobile-nav.open a:nth-child(6){transition-delay:0.36s;}
 .mobile-nav a:hover{color:#fff;}
 .mn-footer{display:flex;flex-direction:column;gap:10px;align-items:center;margin-top:36px;opacity:0;transition:opacity 0.4s 0.38s;}
 .mobile-nav.open .mn-footer{opacity:1;}
 .mn-footer a{font-family:'DM Sans',sans-serif;font-size:13px;color:rgba(255,255,255,0.35);text-decoration:none;font-weight:300;border:none;width:auto;padding:3px 0;transform:none;}
 .mn-footer a:hover{color:var(--accent);}
+.mobile-nav-close{position:absolute;top:28px;right:24px;width:44px;height:44px;background:transparent;border:none;cursor:pointer;z-index:260;display:flex;align-items:center;justify-content:center;}
+.mobile-nav-close span{display:block;width:24px;height:2px;background:white;border-radius:2px;position:absolute;}
+.mobile-nav-close span:first-child{transform:rotate(45deg);}
+.mobile-nav-close span:last-child{transform:rotate(-45deg);}
 
 /* === NAV === */
 nav{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:24px 48px;z-index:200;transition:background 0.4s,backdrop-filter 0.4s;}
@@ -47,7 +52,7 @@ nav.scrolled{background:rgba(245,240,235,0.95);backdrop-filter:blur(14px);}
 .hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
 .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
 
-/* === HERO (UNTOUCHED) === */
+/* === HERO === */
 .hero{position:relative;height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center;}
 .hero-bg{position:absolute;inset:0;background:linear-gradient(135deg,#e8ddd4 0%,#d4c5b5 30%,#c5b8ab 60%,#b8a898 100%);z-index:0;}
 .hero-bg::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 60% 40%,rgba(201,168,122,0.2) 0%,transparent 70%);}
@@ -59,11 +64,23 @@ nav.scrolled{background:rgba(245,240,235,0.95);backdrop-filter:blur(14px);}
 @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-20px);}}
 .hero-content{position:relative;z-index:2;text-align:center;padding:0 20px;}
 .hero-eyebrow{font-size:11px;font-weight:400;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);margin-bottom:20px;opacity:0;animation:fadeUp 1s 0.3s forwards;}
-.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(56px,8vw,110px);font-weight:300;line-height:0.95;color:var(--dark);margin-bottom:32px;opacity:0;animation:fadeUp 1s 0.5s forwards;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(56px,8vw,110px);font-weight:300;line-height:0.95;color:var(--dark);margin-bottom:36px;opacity:0;animation:fadeUp 1s 0.5s forwards;}
 .hero-title em{font-style:italic;font-weight:300;}
-.hero-cta{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;border:1px solid var(--dark);border-radius:100px;font-size:13px;font-weight:400;letter-spacing:0.04em;color:var(--dark);text-decoration:none;background:rgba(255,255,255,0.3);backdrop-filter:blur(8px);transition:all 0.3s;opacity:0;animation:fadeUp 1s 0.8s forwards;}
+
+/* Hero buttons row */
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;opacity:0;animation:fadeUp 1s 0.8s forwards;}
+.hero-cta{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;border:1px solid var(--dark);border-radius:100px;font-size:13px;font-weight:400;letter-spacing:0.04em;color:var(--dark);text-decoration:none;background:rgba(255,255,255,0.3);backdrop-filter:blur(8px);transition:all 0.3s;}
 .hero-cta:hover{background:var(--dark);color:#fff;}
 .hero-cta i{font-size:10px;}
+/* Social media CTA — filled gold */
+.hero-cta-social{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;border:1px solid var(--accent);border-radius:100px;font-size:13px;font-weight:500;letter-spacing:0.04em;color:#fff;text-decoration:none;background:var(--accent);backdrop-filter:blur(8px);transition:all 0.3s;box-shadow:0 6px 24px rgba(201,168,122,0.4);}
+.hero-cta-social:hover{background:#b8946a;border-color:#b8946a;transform:translateY(-2px);box-shadow:0 10px 32px rgba(201,168,122,0.5);}
+.hero-cta-social i{font-size:10px;}
+/* Social pill badge above button */
+.hero-social-wrap{display:flex;flex-direction:column;align-items:center;gap:8px;}
+.hero-social-proof{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:500;color:var(--mid);letter-spacing:0.08em;text-transform:uppercase;opacity:0.8;}
+.hero-social-proof::before,.hero-social-proof::after{content:'';width:18px;height:1px;background:var(--accent);}
+
 @keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
 
 /* === SECTIONS === */
@@ -90,7 +107,7 @@ section{padding:120px 48px;}
 .istrip-overlay{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:28px;background:linear-gradient(to top,rgba(26,23,20,0.9) 0%,rgba(26,23,20,0.1) 55%,transparent 100%);}
 .istrip-tag{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;}
 .istrip-title{font-family:'Cormorant Garamond',serif;font-size:clamp(16px,2vw,22px);font-style:italic;font-weight:300;color:#fff;line-height:1.3;}
-.istrip-arrow{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,0.4);margin-top:10px;transition:color 0.3s;opacity:0;transform:translateY(6px);transition:all 0.35s;}
+.istrip-arrow{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,0.4);margin-top:10px;opacity:0;transform:translateY(6px);transition:all 0.35s;}
 .istrip-item:hover .istrip-arrow{opacity:1;transform:translateY(0);color:var(--accent);}
 
 /* === SERVICES === */
@@ -101,7 +118,6 @@ section{padding:120px 48px;}
 .service-card{background:var(--warm);padding:0 0 36px;transition:all 0.4s;cursor:pointer;position:relative;overflow:hidden;text-decoration:none;color:inherit;display:block;}
 .service-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:0;background:var(--dark);transition:height 0.45s ease;z-index:1;}
 .service-card:hover::before{height:100%;}
-/* image top */
 .sc-img{position:relative;overflow:hidden;height:190px;}
 .sc-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.7s cubic-bezier(0.4,0,0.2,1),filter 0.5s;filter:brightness(0.78) saturate(0.75);}
 .service-card:hover .sc-img img{transform:scale(1.09);filter:brightness(0.35) saturate(0.5);}
@@ -147,7 +163,6 @@ section{padding:120px 48px;}
 /* === WHY US === */
 .why{background:var(--cream);}
 .why-header{margin-bottom:56px;}
-/* image feature pair */
 .why-img-row{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-bottom:3px;}
 .why-feat{position:relative;overflow:hidden;height:400px;cursor:pointer;}
 .why-feat img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.8s cubic-bezier(0.4,0,0.2,1),filter 0.6s;filter:brightness(0.55) saturate(0.7);}
@@ -251,45 +266,13 @@ footer{background:var(--dark);padding:60px 48px 36px;}
   .pricing-header{flex-direction:column;align-items:flex-start;gap:16px;}
   .img-banner{height:340px;}
   .why-feat{height:260px;}
+  .hero-btns{flex-direction:column;align-items:center;}
 }
 @media(max-width:580px){
   .intro-img-strip{grid-template-columns:1fr;}
   .istrip-item:first-child{grid-column:span 1;}
   .process-steps{grid-template-columns:1fr;}
   .intro-stats{grid-template-columns:1fr 1fr;}
-}
-
-
-
-
-
-.mobile-nav-close {
-  position: absolute;
-  top: 28px;
-  right: 24px;
-  width: 44px;
-  height: 44px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  z-index: 260;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.mobile-nav-close span {
-  display: block;
-  width: 24px;
-  height: 2px;
-  background: white;
-  border-radius: 2px;
-  position: absolute;
-}
-.mobile-nav-close span:first-child {
-  transform: rotate(45deg);
-}
-.mobile-nav-close span:last-child {
-  transform: rotate(-45deg);
 }
 </style>
 </head>
@@ -299,6 +282,7 @@ footer{background:var(--dark);padding:60px 48px 36px;}
 <div class="mobile-nav" id="mobileNav">
   <button class="mobile-nav-close" onclick="closeMobNav()"><span></span><span></span></button>
   <a href="index.html" onclick="closeMobNav()">Home</a>
+  <a href="social-management.html" onclick="closeMobNav()">Social Media</a>
   <a href="services.html" onclick="closeMobNav()">Services</a>
   <a href="projects.html" onclick="closeMobNav()">Projects</a>
   <a href="contact.html" onclick="closeMobNav()">Contact</a>
@@ -313,6 +297,7 @@ footer{background:var(--dark);padding:60px 48px 36px;}
   <a href="index.html" class="logo">miles<span>tech</span></a>
   <div class="nav-links">
     <a href="index.html">Home</a>
+    <a href="social-management.html">Social Media</a>
     <a href="services.html">Services</a>
     <a href="projects.html">Projects</a>
     <a href="contact.html">Contact</a>
@@ -325,7 +310,7 @@ footer{background:var(--dark);padding:60px 48px 36px;}
   </div>
 </nav>
 
-<!-- HERO (NO CHANGES) -->
+<!-- HERO -->
 <section class="hero">
   <div class="hero-bg"></div>
   <div class="arch arch-1"></div>
@@ -335,7 +320,15 @@ footer{background:var(--dark);padding:60px 48px 36px;}
   <div class="hero-content">
     <p class="hero-eyebrow">A Digital Solutions Studio</p>
     <h1 class="hero-title"><em>Solving the</em><br>Unexpected</h1>
-    <a href="services.html" class="hero-cta">View our services <i class="fa fa-arrow-down"></i></a>
+    <div class="hero-btns">
+      <a href="services.html" class="hero-cta">View our services <i class="fa fa-arrow-down"></i></a>
+      <div class="hero-social-wrap">
+        <div class="hero-social-proof">110K+ followers grown</div>
+        <a href="social-management.html" class="hero-cta-social">
+          <i class="fab fa-instagram"></i> Grow on social <i class="fa fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -396,7 +389,6 @@ footer{background:var(--dark);padding:60px 48px 36px;}
   </div>
   <div class="services-grid">
     <a class="service-card reveal" href="services.html#it">
-
       <div class="sc-body">
         <div class="sc-num">01</div>
         <span class="sc-icon"><i class="fa fa-laptop-code"></i></span>
@@ -405,7 +397,8 @@ footer{background:var(--dark);padding:60px 48px 36px;}
         <span class="sc-arrow">Learn more <i class="fa fa-arrow-right"></i></span>
       </div>
     </a>
-    <a class="service-card reveal" href="services.html#marketing">      <div class="sc-body">
+    <a class="service-card reveal" href="services.html#marketing">
+      <div class="sc-body">
         <div class="sc-num">02</div>
         <span class="sc-icon"><i class="fa fa-chart-line"></i></span>
         <h3 class="sc-title">Marketing & Growth</h3>
@@ -414,7 +407,6 @@ footer{background:var(--dark);padding:60px 48px 36px;}
       </div>
     </a>
     <a class="service-card reveal" href="services.html#account">
-\
       <div class="sc-body">
         <div class="sc-num">03</div>
         <span class="sc-icon"><i class="fa fa-unlock"></i></span>
@@ -424,7 +416,6 @@ footer{background:var(--dark);padding:60px 48px 36px;}
       </div>
     </a>
     <a class="service-card reveal" href="services.html#hacked">
-
       <div class="sc-body">
         <div class="sc-num">04</div>
         <span class="sc-icon"><i class="fa fa-shield-halved"></i></span>
@@ -434,7 +425,6 @@ footer{background:var(--dark);padding:60px 48px 36px;}
       </div>
     </a>
     <a class="service-card reveal" href="services.html#pages">
-
       <div class="sc-body">
         <div class="sc-num">05</div>
         <span class="sc-icon"><i class="fa fa-layer-group"></i></span>
@@ -444,7 +434,6 @@ footer{background:var(--dark);padding:60px 48px 36px;}
       </div>
     </a>
     <a class="service-card reveal" href="services.html#growth">
-
       <div class="sc-body">
         <div class="sc-num">06</div>
         <span class="sc-icon"><i class="fa fa-users"></i></span>
@@ -455,8 +444,6 @@ footer{background:var(--dark);padding:60px 48px 36px;}
     </a>
   </div>
 </section>
-
-
 
 <!-- PROCESS -->
 <section class="process">
@@ -557,7 +544,7 @@ footer{background:var(--dark);padding:60px 48px 36px;}
 <footer>
   <div class="footer-top">
     <div class="footer-logo"><span>miles</span>tech</div>
-    <div class="footer-links"><a href="index.html">Home</a><a href="services.html">Services</a><a href="projects.html">Projects</a><a href="contact.html">Contact</a><a href="tel:+263779405017">+263 77 940 5017</a></div>
+    <div class="footer-links"><a href="index.html">Home</a><a href="social-management.html">Social Media</a><a href="services.html">Services</a><a href="projects.html">Projects</a><a href="contact.html">Contact</a><a href="tel:+263779405017">+263 77 940 5017</a></div>
   </div>
   <div class="footer-bottom"><span>©2026 Miles Tech. All rights reserved.</span><span>Harare, Zimbabwe</span></div>
 </footer>

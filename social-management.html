@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Social Media Management — Miles Tech</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --cream:#f5f0eb;
+  --warm:#e8ddd4;
+  --dark:#1a1714;
+  --mid:#4a4440;
+  --accent:#c9a87a;
+  --accent2:#e8c898;
+  --text:#2d2926;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Outfit',sans-serif;background:var(--cream);color:var(--text);overflow-x:hidden;}
+
+/* ─── NAVBAR ─────────────────────────────────── */
+.navbar{
+  position:fixed;top:0;left:0;right:0;z-index:900;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;height:72px;
+  background:var(--dark);
+  border-bottom:1px solid rgba(201,168,122,0.2);
+  box-shadow:0 2px 32px rgba(0,0,0,0.35);
+}
+.nav-logo{
+  font-family:'Playfair Display',serif;
+  font-size:22px;font-weight:700;
+  color:#fff;text-decoration:none;letter-spacing:.01em;
+}
+.nav-logo span{color:var(--accent);}
+.nav-links{display:flex;gap:8px;align-items:center;}
+.nav-links a{
+  color:rgba(255,255,255,0.7);text-decoration:none;
+  font-size:14px;font-weight:400;padding:8px 16px;
+  border-radius:8px;transition:all .25s;
+  letter-spacing:.02em;
+}
+.nav-links a:hover{color:#fff;background:rgba(255,255,255,0.07);}
+.nav-links a.active{color:var(--accent);background:rgba(201,168,122,0.12);font-weight:500;}
+.nav-actions{display:flex;align-items:center;gap:12px;}
+.nav-cta{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 22px;background:var(--accent);color:#fff;
+  border-radius:10px;font-size:13px;font-weight:600;
+  text-decoration:none;transition:all .25s;
+  letter-spacing:.02em;
+}
+.nav-cta:hover{background:var(--accent2);color:var(--dark);transform:translateY(-1px);}
+
+/* ─── HAMBURGER (VISIBLE!) ─────────────────── */
+.ham-btn{
+  display:none;
+  flex-direction:column;gap:5px;
+  background:rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.2);
+  border-radius:10px;padding:11px 13px;cursor:pointer;
+  transition:all .25s;
+}
+.ham-btn:hover{background:rgba(201,168,122,0.2);border-color:var(--accent);}
+.ham-btn span{
+  display:block;width:22px;height:2px;
+  background:#fff;border-radius:2px;
+  transition:all .35s cubic-bezier(.4,0,.2,1);
+}
+.ham-btn.is-open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.ham-btn.is-open span:nth-child(2){opacity:0;transform:scaleX(0);}
+.ham-btn.is-open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+/* ─── MOBILE MENU ─────────────────────────── */
+.mob-overlay{
+  position:fixed;inset:0;z-index:950;
+  background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(4px);
+  opacity:0;pointer-events:none;transition:opacity .35s;
+}
+.mob-overlay.open{opacity:1;pointer-events:all;}
+.mob-panel{
+  position:fixed;top:0;right:0;bottom:0;width:300px;
+  z-index:960;background:var(--dark);
+  padding:90px 36px 40px;
+  transform:translateX(100%);
+  transition:transform .4s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;
+  border-left:1px solid rgba(201,168,122,0.2);
+}
+.mob-panel.open{transform:translateX(0);}
+.mob-panel-close{
+  position:absolute;top:20px;right:20px;
+  width:42px;height:42px;border-radius:10px;
+  background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  transition:all .25s;color:#fff;font-size:16px;
+}
+.mob-panel-close:hover{background:rgba(201,168,122,0.2);border-color:var(--accent);color:var(--accent);}
+.mob-nav-links{display:flex;flex-direction:column;gap:4px;margin-bottom:auto;}
+.mob-nav-links a{
+  font-family:'Playfair Display',serif;
+  font-size:26px;font-weight:400;
+  color:rgba(255,255,255,0.75);text-decoration:none;
+  padding:14px 16px;border-radius:10px;
+  transition:all .25s;display:flex;align-items:center;justify-content:space-between;
+}
+.mob-nav-links a:hover,.mob-nav-links a.active{
+  color:var(--accent);background:rgba(201,168,122,0.08);
+}
+.mob-nav-links a .arr{font-size:14px;opacity:0;transform:translateX(-8px);transition:all .25s;}
+.mob-nav-links a:hover .arr,.mob-nav-links a.active .arr{opacity:1;transform:translateX(0);}
+.mob-footer-info{padding-top:24px;border-top:1px solid rgba(255,255,255,0.08);}
+.mob-footer-info a{
+  display:flex;align-items:center;gap:10px;
+  color:rgba(255,255,255,0.4);text-decoration:none;
+  font-size:12px;padding:8px 0;transition:color .25s;
+}
+.mob-footer-info a i{color:var(--accent);font-size:14px;width:16px;text-align:center;}
+.mob-footer-info a:hover{color:rgba(255,255,255,0.8);}
+.mob-cta-btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  margin-top:20px;padding:14px;background:var(--accent);color:#fff;
+  border-radius:12px;text-decoration:none;font-weight:600;font-size:14px;
+  transition:all .25s;
+}
+.mob-cta-btn:hover{background:var(--accent2);color:var(--dark);}
+
+/* ─── HERO ────────────────────────────────── */
+.hero{
+  min-height:100vh;background:var(--dark);
+  display:grid;grid-template-columns:1fr 1fr;
+  padding-top:72px;overflow:hidden;position:relative;
+}
+.hero-bg-lines{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(201,168,122,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,168,122,0.04) 1px, transparent 1px);
+  background-size:60px 60px;
+}
+.hero-glow-1{position:absolute;top:-200px;left:-100px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,122,0.08),transparent 65%);pointer-events:none;}
+.hero-glow-2{position:absolute;bottom:-100px;right:0;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(131,58,180,0.07),transparent 65%);pointer-events:none;}
+
+.hero-left{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:80px 64px 80px 64px;position:relative;z-index:2;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:10px;
+  background:rgba(201,168,122,0.1);border:1px solid rgba(201,168,122,0.25);
+  border-radius:100px;padding:8px 18px;
+  font-size:12px;font-weight:500;color:var(--accent);
+  letter-spacing:.08em;text-transform:uppercase;margin-bottom:36px;width:fit-content;
+  animation:fadeUp .8s .2s both;
+}
+.hero-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);}
+.hero-h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(52px,6vw,88px);font-weight:900;
+  color:#fff;line-height:1;margin-bottom:28px;
+  animation:fadeUp .8s .4s both;
+}
+.hero-h1 em{font-style:italic;color:var(--accent);display:block;}
+.hero-sub{
+  font-size:16px;font-weight:300;line-height:1.8;
+  color:rgba(255,255,255,0.5);max-width:420px;
+  margin-bottom:48px;animation:fadeUp .8s .6s both;
+}
+.hero-sub strong{color:rgba(255,255,255,0.8);font-weight:500;}
+.hero-buttons{display:flex;gap:12px;flex-wrap:wrap;animation:fadeUp .8s .8s both;}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:15px 30px;background:var(--accent);color:#fff;
+  border-radius:12px;font-size:14px;font-weight:600;
+  text-decoration:none;transition:all .3s;
+  box-shadow:0 8px 28px rgba(201,168,122,0.3);
+}
+.btn-primary:hover{background:var(--accent2);color:var(--dark);transform:translateY(-2px);box-shadow:0 14px 36px rgba(201,168,122,0.4);}
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:15px 30px;border:1px solid rgba(255,255,255,0.2);
+  color:rgba(255,255,255,0.75);border-radius:12px;font-size:14px;
+  text-decoration:none;transition:all .3s;
+}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent);}
+
+.hero-stats{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:1px;
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.06);
+  border-radius:16px;margin-top:56px;overflow:hidden;
+  animation:fadeUp .8s 1s both;
+}
+.hstat{padding:24px 28px;background:rgba(26,23,20,0.8);}
+.hstat-val{font-family:'Playfair Display',serif;font-size:34px;font-weight:700;color:var(--accent);line-height:1;}
+.hstat-label{font-size:11px;color:rgba(255,255,255,0.35);margin-top:5px;letter-spacing:.04em;font-weight:400;}
+
+.hero-right{
+  position:relative;z-index:2;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  padding:80px 40px;
+  background:linear-gradient(160deg,rgba(131,58,180,0.08) 0%,rgba(201,168,122,0.04) 100%);
+  border-left:1px solid rgba(255,255,255,0.05);
+}
+/* Phone mockup */
+.phone-wrap{position:relative;animation:fadeUp .8s .6s both;}
+.phone{
+  width:220px;background:#0a0a0a;
+  border-radius:36px;overflow:hidden;
+  border:8px solid #1a1a1a;
+  box-shadow:0 40px 80px rgba(0,0,0,0.7),0 0 0 1px rgba(255,255,255,0.06);
+  position:relative;z-index:2;
+}
+.ph-notch{height:26px;background:#0a0a0a;display:flex;align-items:center;justify-content:center;}
+.ph-notch-pill{width:70px;height:6px;background:#222;border-radius:100px;}
+.ph-ig-header{
+  background:linear-gradient(135deg,#1a0038,#0d1117);
+  padding:14px 16px;display:flex;align-items:center;gap:10px;
+  border-bottom:1px solid rgba(255,255,255,0.07);
+}
+.ph-av{
+  width:36px;height:36px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;color:#fff;
+  box-shadow:0 0 0 2px rgba(201,168,122,0.4);
+}
+.ph-info{flex:1;}
+.ph-name-row{display:flex;align-items:center;gap:6px;}
+.ph-username{font-size:12px;font-weight:600;color:#fff;}
+.ph-verified{width:12px;height:12px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.ph-verified i{font-size:6px;color:#fff;}
+.ph-category{font-size:9px;color:rgba(255,255,255,0.4);}
+.ph-follow-btn{font-size:10px;font-weight:600;color:var(--accent);padding:5px 12px;border:1px solid rgba(201,168,122,0.4);border-radius:6px;}
+.ph-stats{display:flex;justify-content:space-around;padding:16px 8px 12px;background:rgba(255,255,255,0.02);}
+.ph-stat{text-align:center;}
+.ph-stat strong{display:block;font-size:13px;font-weight:700;color:#fff;}
+.ph-stat span{font-size:8px;color:rgba(255,255,255,0.4);}
+.ph-stat strong.gold{color:var(--accent);}
+.ph-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;}
+.ph-cell{aspect-ratio:1;position:relative;overflow:hidden;}
+.ph-cell::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,0.2);}
+.ph-cell:nth-child(1){background:linear-gradient(135deg,#833ab4,#fd1d1d);}
+.ph-cell:nth-child(2){background:linear-gradient(135deg,#fcb045,#fd1d1d);}
+.ph-cell:nth-child(3){background:linear-gradient(135deg,#1877f2,#833ab4);}
+.ph-cell:nth-child(4){background:linear-gradient(135deg,#00c853,#00b0ff);}
+.ph-cell:nth-child(5){background:linear-gradient(135deg,#ff6e40,#ff1744);}
+.ph-cell:nth-child(6){background:linear-gradient(135deg,var(--accent),#1a0038);}
+.ph-highlights{display:flex;gap:10px;padding:12px 14px;overflow:hidden;}
+.ph-hl{text-align:center;}
+.ph-hl-ring{width:42px;height:42px;border-radius:50%;border:2px solid rgba(201,168,122,0.5);display:flex;align-items:center;justify-content:center;margin:0 auto 4px;}
+.ph-hl-ring div{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#833ab4,#fd1d1d);}
+.ph-hl span{font-size:7px;color:rgba(255,255,255,0.5);}
+
+/* Floating cards */
+.float-card{
+  position:absolute;z-index:3;
+  background:rgba(26,23,20,0.92);border:1px solid rgba(201,168,122,0.25);
+  border-radius:14px;padding:12px 18px;
+  backdrop-filter:blur(16px);
+  box-shadow:0 16px 48px rgba(0,0,0,0.5);
+}
+.fc-growth{top:15%;right:2%;animation:floatA 4s ease-in-out infinite;}
+.fc-growth .fc-val{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--accent);line-height:1;}
+.fc-growth .fc-label{font-size:10px;color:rgba(255,255,255,0.4);margin-top:3px;}
+.fc-growth .fc-sub{font-size:10px;color:rgba(255,255,255,0.6);font-weight:500;}
+.fc-live{bottom:20%;left:2%;animation:floatB 4s ease-in-out infinite;}
+.fc-live-dot{width:8px;height:8px;border-radius:50%;background:#00e676;margin-right:8px;animation:pulse 1.5s infinite;}
+.fc-live{display:flex;align-items:center;font-size:12px;color:#fff;font-weight:500;}
+.fc-live span{color:rgba(255,255,255,0.5);font-size:11px;margin-left:4px;}
+
+@keyframes floatA{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+@keyframes floatB{0%,100%{transform:translateY(0);}50%{transform:translateY(8px);}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(1.4);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+
+/* ─── STRIP: PLATFORMS ────────────────────── */
+.plat-strip{
+  background:var(--dark);border-top:1px solid rgba(255,255,255,0.05);
+  padding:28px 40px;display:flex;align-items:center;gap:40px;
+  border-bottom:1px solid rgba(255,255,255,0.05);overflow:hidden;
+}
+.plat-strip-label{font-size:11px;color:rgba(255,255,255,0.25);letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;flex-shrink:0;}
+.plat-strip-divider{width:1px;height:28px;background:rgba(255,255,255,0.08);flex-shrink:0;}
+.plat-icons{display:flex;gap:32px;align-items:center;flex-wrap:wrap;}
+.plat-icons i{font-size:22px;opacity:0.45;transition:opacity .25s,transform .25s;}
+.plat-icons i:hover{opacity:1;transform:scale(1.2);}
+.plat-icons .fa-instagram{color:#e4405f;}
+.plat-icons .fa-facebook{color:#1877f2;}
+.plat-icons .fa-tiktok{color:#fff;}
+.plat-icons .fa-twitter{color:#1DA1F2;}
+.plat-icons .fa-youtube{color:#ff0000;}
+.plat-icons .fa-whatsapp{color:#25d366;}
+.plat-icons .fa-linkedin{color:#0a66c2;}
+
+/* ─── SECTION SHARED ──────────────────────── */
+.sec-tag{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;font-weight:500;}
+.sec-title{font-family:'Playfair Display',serif;font-size:clamp(34px,4vw,56px);font-weight:700;line-height:1.05;color:var(--dark);}
+.sec-title em{font-style:italic;color:var(--accent);}
+.sec-title-light{color:#fff;}
+
+/* ─── CASE STUDY ──────────────────────────── */
+.case-section{background:var(--cream);padding:100px 40px;}
+.case-inner{
+  max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;gap:0;
+  border-radius:24px;overflow:hidden;
+  box-shadow:0 32px 80px rgba(0,0,0,0.12);
+}
+.case-visual{
+  background:linear-gradient(160deg,#0d0020,#1a0038,#0d1117);
+  padding:48px 36px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
+  position:relative;overflow:hidden;
+}
+.case-visual::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 60% 40%,rgba(131,58,180,0.25),transparent 60%),
+             radial-gradient(ellipse at 20% 70%,rgba(201,168,122,0.15),transparent 50%);
+}
+.real-screenshot-wrap{position:relative;z-index:2;width:100%;}
+.screenshot-label{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  margin-bottom:10px;
+}
+.screenshot-label.ig{color:#e4405f;}
+.screenshot-label.fb{color:#4e9af1;}
+.screenshot-label i{font-size:14px;}
+.real-screenshot{
+  width:100%;max-width:420px;
+  border-radius:12px;
+  display:block;
+  border:1px solid rgba(255,255,255,0.1);
+  box-shadow:0 12px 40px rgba(0,0,0,0.55);
+  object-fit:contain;
+}
+.screenshot-divider{
+  width:100%;height:1px;background:rgba(255,255,255,0.07);margin:4px 0;
+}
+.case-content-side{
+  background:var(--dark);padding:56px 48px;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.case-tag{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:16px;letter-spacing:.08em;}
+.case-tag i{color:#e4405f;}
+.case-content-side .sec-title{font-size:clamp(28px,3vw,42px);}
+.case-desc{font-size:14px;font-weight:300;line-height:1.85;color:rgba(255,255,255,0.5);margin:20px 0 36px;}
+.case-metrics{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,0.07);border-radius:16px;overflow:hidden;margin-bottom:36px;}
+.cm-item{background:rgba(255,255,255,0.03);padding:24px 20px;}
+.cm-val{font-family:'Playfair Display',serif;font-size:36px;font-weight:700;color:var(--accent);line-height:1;}
+.cm-label{font-size:11px;color:rgba(255,255,255,0.35);margin-top:5px;}
+
+/* ─── SERVICES ────────────────────────────── */
+.services-section{background:var(--warm);padding:100px 40px;}
+.services-inner{max-width:1200px;margin:0 auto;}
+.services-top{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:end;margin-bottom:64px;}
+.services-intro{font-size:15px;font-weight:300;line-height:1.85;color:var(--mid);}
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(0,0,0,0.08);border-radius:20px;overflow:hidden;}
+.srv-card{
+  background:var(--cream);padding:40px 32px;
+  transition:background .3s;
+  position:relative;overflow:hidden;
+}
+.srv-card::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:var(--accent);transform:scaleX(0);transition:transform .3s;
+  transform-origin:left;
+}
+.srv-card:hover{background:#fff;}
+.srv-card:hover::after{transform:scaleX(1);}
+.srv-icon{
+  width:52px;height:52px;border-radius:14px;
+  background:rgba(201,168,122,0.12);border:1px solid rgba(201,168,122,0.2);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:24px;transition:background .3s,border-color .3s;
+}
+.srv-card:hover .srv-icon{background:rgba(201,168,122,0.2);border-color:var(--accent);}
+.srv-icon i{font-size:20px;color:var(--accent);}
+.srv-num{font-size:10px;color:var(--accent);font-weight:600;letter-spacing:.12em;margin-bottom:10px;}
+.srv-name{font-size:16px;font-weight:600;color:var(--dark);margin-bottom:10px;}
+.srv-desc{font-size:13px;font-weight:300;color:var(--mid);line-height:1.7;}
+
+/* ─── RESULTS ─────────────────────────────── */
+.results-section{background:var(--dark);padding:100px 40px;}
+.results-inner{max-width:1200px;margin:0 auto;}
+.results-header{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:end;margin-bottom:64px;}
+.results-header .sec-title{color:#fff;}
+.results-intro{font-size:15px;font-weight:300;line-height:1.85;color:rgba(255,255,255,0.4);}
+.results-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,0.07);border-radius:20px;overflow:hidden;margin-bottom:1px;}
+.res-card{background:rgba(255,255,255,0.02);padding:48px 36px;}
+.res-val{font-family:'Playfair Display',serif;font-size:clamp(44px,4.5vw,68px);font-weight:700;color:var(--accent);line-height:1;margin-bottom:12px;}
+.res-label{font-size:13px;font-weight:300;color:rgba(255,255,255,0.4);line-height:1.6;}
+.results-bottom{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,0.07);border-radius:20px;overflow:hidden;margin-top:1px;}
+.rb-item{background:rgba(255,255,255,0.02);padding:36px;display:flex;align-items:center;gap:20px;}
+.rb-icon{width:56px;height:56px;border-radius:14px;background:rgba(201,168,122,0.1);border:1px solid rgba(201,168,122,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.rb-icon i{font-size:22px;color:var(--accent);}
+.rb-text strong{display:block;font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:#fff;margin-bottom:4px;}
+.rb-text span{font-size:12px;color:rgba(255,255,255,0.35);}
+
+/* ─── PROCESS ─────────────────────────────── */
+.process-section{background:var(--cream);padding:100px 40px;}
+.process-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 2fr;gap:80px;align-items:start;}
+.process-left{position:sticky;top:100px;}
+.process-steps{display:flex;flex-direction:column;gap:0;}
+.proc-step{
+  display:grid;grid-template-columns:64px 1fr;gap:24px;
+  padding:36px 0;border-bottom:1px solid rgba(0,0,0,0.08);
+  align-items:start;transition:background .3s;cursor:default;
+}
+.proc-step:first-child{border-top:1px solid rgba(0,0,0,0.08);}
+.proc-step:hover .proc-num-circle{background:var(--accent);color:#fff;}
+.proc-num-circle{
+  width:48px;height:48px;border-radius:50%;
+  border:1px solid rgba(0,0,0,0.12);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Playfair Display',serif;font-size:18px;font-weight:700;
+  color:var(--mid);transition:all .3s;
+  flex-shrink:0;margin-top:3px;
+}
+.proc-step-title{font-size:16px;font-weight:600;color:var(--dark);margin-bottom:8px;}
+.proc-step-desc{font-size:13px;font-weight:300;color:var(--mid);line-height:1.75;}
+
+/* ─── TESTIMONIALS ────────────────────────── */
+.testi-section{background:var(--dark);padding:100px 40px;}
+.testi-inner{max-width:1200px;margin:0 auto;}
+.testi-header{margin-bottom:64px;}
+.testi-header .sec-title{color:#fff;}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.testi-card{
+  background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);
+  border-radius:20px;padding:36px;
+  transition:border-color .3s,background .3s;position:relative;overflow:hidden;
+}
+.testi-card::before{
+  content:'"';position:absolute;top:-10px;right:20px;
+  font-family:'Playfair Display',serif;font-size:120px;font-style:italic;
+  color:rgba(201,168,122,0.06);line-height:1;pointer-events:none;
+}
+.testi-card:hover{border-color:rgba(201,168,122,0.25);background:rgba(255,255,255,0.04);}
+.testi-plat{display:flex;align-items:center;gap:8px;margin-bottom:20px;}
+.testi-plat i{font-size:16px;}
+.testi-plat span{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,0.35);}
+.testi-quote{
+  font-family:'Playfair Display',serif;font-size:18px;font-style:italic;
+  font-weight:400;color:rgba(255,255,255,0.82);line-height:1.7;
+  margin-bottom:28px;
+}
+.testi-author{display:flex;align-items:center;gap:14px;}
+.testi-avatar{
+  width:42px;height:42px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),#833ab4);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:700;color:#fff;flex-shrink:0;
+}
+.testi-name{font-size:14px;font-weight:600;color:#fff;}
+.testi-role{font-size:11px;color:rgba(255,255,255,0.35);}
+.testi-result-badge{
+  display:inline-block;margin-top:8px;
+  padding:5px 12px;background:rgba(201,168,122,0.1);
+  border:1px solid rgba(201,168,122,0.2);border-radius:100px;
+  font-size:10px;color:var(--accent);font-weight:600;letter-spacing:.06em;
+}
+
+/* ─── PRICING ─────────────────────────────── */
+.pricing-section{background:var(--cream);padding:100px 40px;}
+.pricing-inner{max-width:1200px;margin:0 auto;}
+.pricing-top{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:end;margin-bottom:64px;}
+.pricing-note{font-size:14px;font-weight:300;color:var(--mid);line-height:1.85;}
+.pricing-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:start;}
+.pkg-card{
+  border-radius:20px;border:1px solid rgba(0,0,0,0.1);
+  padding:40px 32px;background:#fff;transition:transform .3s,box-shadow .3s;
+}
+.pkg-card:hover{transform:translateY(-4px);box-shadow:0 24px 56px rgba(0,0,0,0.1);}
+.pkg-card.featured{
+  background:var(--dark);border-color:var(--accent);
+  box-shadow:0 16px 48px rgba(0,0,0,0.2);
+}
+.pkg-badge{display:inline-block;padding:5px 14px;background:rgba(201,168,122,0.15);border:1px solid rgba(201,168,122,0.3);border-radius:100px;font-size:10px;font-weight:600;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px;}
+.pkg-name{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--dark);margin-bottom:8px;}
+.pkg-card.featured .pkg-name{color:#fff;}
+.pkg-price{font-size:36px;font-weight:700;color:var(--accent);line-height:1;margin-bottom:6px;}
+.pkg-period{font-size:12px;color:rgba(0,0,0,0.35);font-weight:400;}
+.pkg-card.featured .pkg-period{color:rgba(255,255,255,0.35);}
+.pkg-divider{height:1px;background:rgba(0,0,0,0.07);margin:28px 0;}
+.pkg-card.featured .pkg-divider{background:rgba(255,255,255,0.1);}
+.pkg-feature{display:flex;align-items:center;gap:12px;margin-bottom:14px;font-size:13px;color:var(--mid);}
+.pkg-card.featured .pkg-feature{color:rgba(255,255,255,0.6);}
+.pkg-feature i.fa-check{color:var(--accent);}
+.pkg-feature i.fa-times{color:rgba(0,0,0,0.2);}
+.pkg-feature.has{font-weight:500;color:var(--dark);}
+.pkg-card.featured .pkg-feature.has{color:#fff;}
+.pkg-btn{
+  display:block;text-align:center;margin-top:28px;
+  padding:14px;border-radius:12px;font-size:14px;font-weight:600;
+  text-decoration:none;transition:all .3s;
+}
+.pkg-btn-outline{border:1px solid var(--dark);color:var(--dark);}
+.pkg-btn-outline:hover{background:var(--dark);color:#fff;}
+.pkg-btn-filled{background:var(--accent);color:#fff;border:1px solid var(--accent);}
+.pkg-btn-filled:hover{background:#b8946a;transform:translateY(-1px);}
+
+/* ─── CTA ──────────────────────────────────── */
+.cta-section{
+  background:var(--dark);padding:100px 40px;
+  position:relative;overflow:hidden;
+}
+.cta-glow{position:absolute;bottom:-150px;left:50%;transform:translateX(-50%);width:800px;height:400px;border-radius:50%;background:radial-gradient(ellipse,rgba(201,168,122,0.1),transparent 65%);pointer-events:none;}
+.cta-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;position:relative;z-index:2;}
+.cta-left .sec-title{color:#fff;margin-bottom:16px;}
+.cta-sub{font-size:15px;font-weight:300;color:rgba(255,255,255,0.45);line-height:1.75;margin-bottom:36px;}
+.cta-right{display:flex;flex-direction:column;gap:16px;}
+.contact-row{
+  display:flex;align-items:center;gap:16px;
+  padding:20px 24px;border-radius:16px;
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
+  text-decoration:none;transition:all .3s;
+}
+.contact-row:hover{background:rgba(201,168,122,0.08);border-color:rgba(201,168,122,0.25);}
+.cr-icon{width:48px;height:48px;border-radius:12px;background:rgba(201,168,122,0.1);border:1px solid rgba(201,168,122,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.cr-icon i{font-size:18px;color:var(--accent);}
+.cr-main{font-size:15px;font-weight:500;color:#fff;}
+.cr-sub{font-size:12px;color:rgba(255,255,255,0.35);}
+
+/* ─── FOOTER ───────────────────────────────── */
+footer{background:#0f0d0b;padding:56px 40px 32px;}
+.footer-inner{max-width:1200px;margin:0 auto;}
+.footer-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:40px;flex-wrap:wrap;gap:24px;}
+.footer-logo{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:#fff;}
+.footer-logo span{color:var(--accent);}
+.footer-links{display:flex;gap:28px;flex-wrap:wrap;}
+.footer-links a{font-size:13px;color:rgba(255,255,255,0.4);text-decoration:none;transition:color .25s;}
+.footer-links a:hover{color:rgba(255,255,255,0.8);}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.06);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+.footer-copy{font-size:12px;color:rgba(255,255,255,0.25);}
+.footer-loc{font-size:12px;color:rgba(255,255,255,0.25);display:flex;align-items:center;gap:6px;}
+.footer-loc i{color:var(--accent);font-size:11px;}
+
+/* ─── REVEAL ANIMATIONS ───────────────────── */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .7s ease,transform .7s ease;}
+.reveal.in{opacity:1;transform:none;}
+.reveal-l{opacity:0;transform:translateX(-32px);transition:opacity .7s ease,transform .7s ease;}
+.reveal-l.in{opacity:1;transform:none;}
+.reveal-r{opacity:0;transform:translateX(32px);transition:opacity .7s ease,transform .7s ease;}
+.reveal-r.in{opacity:1;transform:none;}
+
+/* ─── RESPONSIVE ─────────────────────────── */
+@media(max-width:1100px){
+  .results-grid{grid-template-columns:1fr 1fr;}
+  .testi-grid{grid-template-columns:1fr;}
+  .pricing-cards{grid-template-columns:1fr;}
+  .pkg-card.featured{order:-1;}
+}
+@media(max-width:900px){
+  .navbar{padding:0 20px;}
+  .nav-links,.nav-actions .nav-cta{display:none;}
+  .ham-btn{display:flex;}
+  .hero{grid-template-columns:1fr;min-height:auto;}
+  .hero-right{display:none;}
+  .hero-left{padding:100px 24px 60px;}
+  .hero-stats{grid-template-columns:1fr 1fr;}
+  .case-inner{grid-template-columns:1fr;}
+  .case-visual{min-height:auto;padding:32px 24px;gap:16px;}
+  .real-screenshot{max-width:100%;}
+  .case-content-side{padding:40px 28px;}
+  .services-top{grid-template-columns:1fr;gap:20px;}
+  .services-grid{grid-template-columns:1fr 1fr;}
+  .results-header{grid-template-columns:1fr;gap:20px;}
+  .results-grid{grid-template-columns:1fr 1fr;}
+  .results-bottom{grid-template-columns:1fr;}
+  .process-inner{grid-template-columns:1fr;}
+  .process-left{position:static;}
+  .testi-grid{grid-template-columns:1fr;}
+  .pricing-top{grid-template-columns:1fr;gap:20px;}
+  .pricing-cards{grid-template-columns:1fr;}
+  .cta-inner{grid-template-columns:1fr;gap:48px;}
+  .plat-strip{padding:20px 24px;gap:20px;}
+  .plat-strip-label{display:none;}
+  .plat-strip-divider{display:none;}
+  section,.case-section,.services-section,.results-section,.process-section,.testi-section,.pricing-section,.cta-section{padding:72px 20px;}
+}
+@media(max-width:580px){
+  .services-grid{grid-template-columns:1fr;}
+  .results-grid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- MOBILE OVERLAY -->
+<div class="mob-overlay" id="mobOverlay" onclick="closeMenu()"></div>
+<div class="mob-panel" id="mobPanel">
+  <button class="mob-panel-close" onclick="closeMenu()">
+    <i class="fa fa-times"></i>
+  </button>
+  <nav class="mob-nav-links">
+    <a href="index.html">Home <span class="arr"><i class="fa fa-arrow-right"></i></span></a>
+    <a href="services.html">Services <span class="arr"><i class="fa fa-arrow-right"></i></span></a>
+    <a href="social-management.html" class="active">Social Media <span class="arr"><i class="fa fa-arrow-right"></i></span></a>
+    <a href="projects.html">Projects <span class="arr"><i class="fa fa-arrow-right"></i></span></a>
+    <a href="contact.html">Contact <span class="arr"><i class="fa fa-arrow-right"></i></span></a>
+  </nav>
+  <div class="mob-footer-info">
+    <a href="tel:+263779405017"><i class="fa fa-phone"></i> +263 77 940 5017</a>
+    <a href="/cdn-cgi/l/email-protection#81ece0f5e8fbe0f6e0f8efe4c1e6ece0e8edafe2eeec"><i class="fa fa-envelope"></i> <span class="__cf_email__" data-cfemail="c4a9a5b0adbea5b3a5bdaaa184a3a9a5ada8eaa7aba9">[email&#160;protected]</span></a>
+    <a href="https://wa.me/263779405017"><i class="fab fa-whatsapp" style="color:#25d366;"></i> WhatsApp us</a>
+  </div>
+  <a href="contact.html" class="mob-cta-btn">
+    Start Growing <i class="fa fa-arrow-right"></i>
+  </a>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="mainNav">
+  <a href="index.html" class="nav-logo">Miles<span>Tech</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="services.html">Services</a>
+    <a href="social-management.html" class="active">Social Media</a>
+    <a href="projects.html">Projects</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <div class="nav-actions">
+    <a href="contact.html" class="nav-cta">Get Started <i class="fa fa-arrow-right"></i></a>
+    <button class="ham-btn" id="hamBtn" onclick="toggleMenu()" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ─── HERO ─────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-bg-lines"></div>
+  <div class="hero-glow-1"></div>
+  <div class="hero-glow-2"></div>
+
+  <div class="hero-left">
+    <div class="hero-badge">Social Media Management</div>
+    <h1 class="hero-h1">
+      We grow<br>your brand
+      <em>online.</em>
+    </h1>
+    <p class="hero-sub">
+      Content, growth, community, ads — everything your brand needs. Ask <strong>zimmillionaires</strong> — we took them from zero to <strong>110K followers</strong>.
+    </p>
+    <div class="hero-buttons">
+      <a href="contact.html" class="btn-primary">Start Growing <i class="fa fa-arrow-right"></i></a>
+      <a href="#case" class="btn-secondary">See Real Results</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-val">110K+</div><div class="hstat-label">Followers grown</div></div>
+      <div class="hstat"><div class="hstat-val">500+</div><div class="hstat-label">Pages managed</div></div>
+      <div class="hstat"><div class="hstat-val">98%</div><div class="hstat-label">Client retention</div></div>
+      <div class="hstat"><div class="hstat-val">7</div><div class="hstat-label">Platforms covered</div></div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="ph-notch"><div class="ph-notch-pill"></div></div>
+        <div class="ph-ig-header">
+          <div class="ph-av">Z</div>
+          <div class="ph-info">
+            <div class="ph-name-row">
+              <span class="ph-username">zimmillionaires</span>
+              <div class="ph-verified"><i class="fa fa-check"></i></div>
+            </div>
+            <div class="ph-category">Lifestyle · Harare, ZW</div>
+          </div>
+          <div class="ph-follow-btn">Follow</div>
+        </div>
+        <div class="ph-stats">
+          <div class="ph-stat"><strong>2,484</strong><span>posts</span></div>
+          <div class="ph-stat"><strong class="gold">110K</strong><span>followers</span></div>
+          <div class="ph-stat"><strong>311</strong><span>following</span></div>
+        </div>
+        <div class="ph-highlights">
+          <div class="ph-hl"><div class="ph-hl-ring"><div></div></div><span>Cars</span></div>
+          <div class="ph-hl"><div class="ph-hl-ring" style="border-color:rgba(253,29,29,0.5);"><div style="background:linear-gradient(135deg,#fd1d1d,#fcb045)"></div></div><span>Lifestyle</span></div>
+          <div class="ph-hl"><div class="ph-hl-ring" style="border-color:rgba(252,176,69,0.5);"><div style="background:linear-gradient(135deg,#fcb045,#833ab4)"></div></div><span>Wealth</span></div>
+        </div>
+        <div class="ph-grid">
+          <div class="ph-cell"></div><div class="ph-cell"></div><div class="ph-cell"></div>
+          <div class="ph-cell"></div><div class="ph-cell"></div><div class="ph-cell"></div>
+        </div>
+      </div>
+
+      <div class="float-card fc-growth">
+        <div class="fc-val">+104K</div>
+        <div class="fc-sub">followers grown</div>
+        <div class="fc-label">in 12 months</div>
+      </div>
+      <div class="float-card fc-live">
+        <div class="fc-live-dot"></div>
+        Live campaign
+        <span>running</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLATFORM STRIP -->
+<div class="plat-strip">
+  <span class="plat-strip-label">We manage</span>
+  <div class="plat-strip-divider"></div>
+  <div class="plat-icons">
+    <i class="fab fa-instagram" title="Instagram"></i>
+    <i class="fab fa-facebook" title="Facebook"></i>
+    <i class="fab fa-tiktok" title="TikTok"></i>
+    <i class="fab fa-twitter" title="X / Twitter"></i>
+    <i class="fab fa-youtube" title="YouTube"></i>
+    <i class="fab fa-whatsapp" title="WhatsApp Business"></i>
+    <i class="fab fa-linkedin" title="LinkedIn"></i>
+  </div>
+</div>
+
+<!-- ─── CASE STUDY ─────────────────────────────────── -->
+<section class="case-section" id="case">
+  <div style="max-width:1200px;margin:0 auto 56px;" class="reveal">
+    <p class="sec-tag">Case Study</p>
+    <h2 class="sec-title">Zimbabwe's #1 lifestyle page —<br><em>built from scratch by us</em></h2>
+  </div>
+  <div class="case-inner">
+    <div class="case-visual reveal-l">
+      <div class="real-screenshot-wrap">
+        <div class="screenshot-label ig"><i class="fab fa-instagram"></i> Instagram — 110K followers</div>
+        <img src="million.png" alt="zimmillionaires Instagram profile — 110K followers" class="real-screenshot">
+      </div>
+      <div class="screenshot-divider"></div>
+      <div class="real-screenshot-wrap">
+        <div class="screenshot-label fb"><i class="fab fa-facebook"></i> Facebook — 115K followers</div>
+        <img src="f.png" alt="Zimmillionaires Facebook page — 115K followers" class="real-screenshot">
+      </div>
+    </div>
+    <div class="case-content-side reveal-r">
+      <div class="case-tag"><i class="fab fa-instagram"></i> instagram.com/zimmillionaires</div>
+      <h3 class="sec-title sec-title-light">From zero to <em>110K</em> — Zimbabwe's richest lifestyle brand</h3>
+      <p class="case-desc">Zimmillionaires came with a vision: showcase Zimbabwe's richest people, finest cars, and most luxurious lifestyle. We built the content strategy, the growth engine, and the community from the ground up. Today they command 110K engaged followers and reach millions every month.</p>
+      <div class="case-metrics">
+        <div class="cm-item"><div class="cm-val">110K+</div><div class="cm-label">Instagram followers</div></div>
+        <div class="cm-item"><div class="cm-val">115K+</div><div class="cm-label">Facebook followers</div></div>
+        <div class="cm-item"><div class="cm-val">100M+</div><div class="cm-label">Total reach</div></div>
+        <div class="cm-item"><div class="cm-val">#1</div><div class="cm-label">Lifestyle page in Zim</div></div>
+      </div>
+      <a href="contact.html" class="btn-primary" style="align-self:flex-start;">Get the same results <i class="fa fa-arrow-right"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SERVICES ───────────────────────────────────── -->
+<section class="services-section">
+  <div class="services-inner">
+    <div class="services-top">
+      <div class="reveal-l">
+        <p class="sec-tag">What we do</p>
+        <h2 class="sec-title">Everything your<br>social media <em>needs</em></h2>
+      </div>
+      <p class="services-intro reveal-r">We don't just post content. We build brands, grow communities, and turn followers into paying customers — across every major platform.</p>
+    </div>
+    <div class="services-grid">
+      <div class="srv-card reveal">
+        <div class="srv-icon"><i class="fa fa-pen-nib"></i></div>
+        <div class="srv-num">01</div>
+        <div class="srv-name">Content Creation & Scheduling</div>
+        <p class="srv-desc">Posts, reels, stories and captions crafted to your brand voice — scheduled at peak times for maximum reach.</p>
+      </div>
+      <div class="srv-card reveal">
+        <div class="srv-icon"><i class="fa fa-users"></i></div>
+        <div class="srv-num">02</div>
+        <div class="srv-name">Follower Growth</div>
+        <p class="srv-desc">Real followers, not bots. Proven organic and paid strategies that attract people who genuinely care about your brand.</p>
+      </div>
+      <div class="srv-card reveal">
+        <div class="srv-icon"><i class="fa fa-bullhorn"></i></div>
+        <div class="srv-num">03</div>
+        <div class="srv-name">Paid Advertising Campaigns</div>
+        <p class="srv-desc">Facebook and Instagram ads designed to target your exact customer and deliver measurable ROI every time.</p>
+      </div>
+      <div class="srv-card reveal">
+        <div class="srv-icon"><i class="fa fa-comments"></i></div>
+        <div class="srv-num">04</div>
+        <div class="srv-name">Community Management</div>
+        <p class="srv-desc">Daily responses to comments and DMs — keeping your brand present, professional, and always responsive.</p>
+      </div>
+      <div class="srv-card reveal">
+        <div class="srv-icon"><i class="fa fa-chart-line"></i></div>
+        <div class="srv-num">05</div>
+        <div class="srv-name">Analytics & Monthly Reporting</div>
+        <p class="srv-desc">Clear reports showing what's growing, what's working, and where your next opportunity lies.</p>
+      </div>
+      <div class="srv-card reveal">
+        <div class="srv-icon"><i class="fa fa-star"></i></div>
+        <div class="srv-num">06</div>
+        <div class="srv-name">Brand Strategy & Identity</div>
+        <p class="srv-desc">Brand voice, visual identity, and content pillars defined — so every post reinforces who you are.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── RESULTS ────────────────────────────────────── -->
+<section class="results-section">
+  <div class="results-inner">
+    <div class="results-header">
+      <div class="reveal-l">
+        <p class="sec-tag">Our track record</p>
+        <h2 class="sec-title sec-title-light">Numbers that<br><em>say enough</em></h2>
+      </div>
+      <p class="results-intro reveal-r">We let results speak. Every number below is real — earned through strategy, consistency, and deep platform knowledge.</p>
+    </div>
+    <div class="results-grid">
+      <div class="res-card reveal"><div class="res-val">110K+</div><div class="res-label">Followers grown on a single Instagram account</div></div>
+      <div class="res-card reveal"><div class="res-val">940%</div><div class="res-label">Average follower growth across managed clients</div></div>
+      <div class="res-card reveal"><div class="res-val">100M+</div><div class="res-label">Total content impressions delivered for clients</div></div>
+      <div class="res-card reveal"><div class="res-val">98%</div><div class="res-label">Client satisfaction and retention rate</div></div>
+    </div>
+    <div class="results-bottom">
+      <div class="rb-item reveal-l">
+        <div class="rb-icon"><i class="fa fa-clock"></i></div>
+        <div class="rb-text"><strong>24–72 hours</strong><span>Time to first measurable growth after onboarding</span></div>
+      </div>
+      <div class="rb-item reveal-r">
+        <div class="rb-icon"><i class="fa fa-globe"></i></div>
+        <div class="rb-text"><strong>7 Platforms</strong><span>Instagram, Facebook, TikTok, X, YouTube, WhatsApp Business & LinkedIn</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PROCESS ────────────────────────────────────── -->
+<section class="process-section">
+  <div class="process-inner">
+    <div class="process-left reveal-l">
+      <p class="sec-tag">How it works</p>
+      <h2 class="sec-title">A process that<br><em>gets results</em><br>every time</h2>
+      <p style="margin-top:20px;font-size:14px;font-weight:300;color:var(--mid);line-height:1.8;">From day one to ongoing growth — here's exactly what working with us looks like.</p>
+    </div>
+    <div class="process-steps reveal-r">
+      <div class="proc-step">
+        <div class="proc-num-circle">1</div>
+        <div><div class="proc-step-title">Discovery & Strategy</div><p class="proc-step-desc">We learn your brand, your goals, and your audience. Then we build a strategy specific to you — not a template copied from someone else.</p></div>
+      </div>
+      <div class="proc-step">
+        <div class="proc-num-circle">2</div>
+        <div><div class="proc-step-title">Profile Optimisation</div><p class="proc-step-desc">Bio, visuals, highlights, links — everything is sharpened and polished before a single post goes live.</p></div>
+      </div>
+      <div class="proc-step">
+        <div class="proc-num-circle">3</div>
+        <div><div class="proc-step-title">Content Creation</div><p class="proc-step-desc">We build a full content calendar. You approve it. We post, we manage, we engage — every single day without fail.</p></div>
+      </div>
+      <div class="proc-step">
+        <div class="proc-num-circle">4</div>
+        <div><div class="proc-step-title">Growth Campaigns</div><p class="proc-step-desc">Organic strategies, paid promotions, and targeted outreach all run simultaneously to maximise your reach and follower growth.</p></div>
+      </div>
+      <div class="proc-step">
+        <div class="proc-num-circle">5</div>
+        <div><div class="proc-step-title">Monthly Review & Reporting</div><p class="proc-step-desc">Full performance reports every month. We review what's working, cut what's not, and double down on what's delivering results.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── TESTIMONIALS ───────────────────────────────── -->
+<section class="testi-section">
+  <div class="testi-inner">
+    <div class="testi-header">
+      <p class="sec-tag reveal">Client results</p>
+      <h2 class="sec-title sec-title-light reveal">What our clients <em>say</em></h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card reveal">
+        <div class="testi-plat"><i class="fab fa-instagram" style="color:#e4405f;"></i><span>Instagram</span></div>
+        <p class="testi-quote">"My Instagram went from 800 followers to 12,000 in two months. My DMs are full of genuine customers every single day."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">R</div>
+          <div>
+            <div class="testi-name">Rudo C.</div>
+            <div class="testi-role">Fashion Boutique, Harare</div>
+            <div class="testi-result-badge">+11,200 followers in 60 days</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card reveal">
+        <div class="testi-plat"><i class="fab fa-facebook" style="color:#1877f2;"></i><span>Facebook</span></div>
+        <p class="testi-quote">"They grew my Facebook page from 200 to over 5,000 fans in three weeks. The content looks more professional than anything I could do myself."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#1877f2,#833ab4);">B</div>
+          <div>
+            <div class="testi-name">Blessing K.</div>
+            <div class="testi-role">Online Retailer, Bulawayo</div>
+            <div class="testi-result-badge">+4,800 fans in 21 days</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card reveal">
+        <div class="testi-plat"><i class="fab fa-tiktok" style="color:#fff;"></i><span>TikTok</span></div>
+        <p class="testi-quote">"I had zero TikTok presence. Six weeks later I had a video with 250,000 views. Miles Tech genuinely know what they're doing."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#010101,#69c9d0);">T</div>
+          <div>
+            <div class="testi-name">Tanaka M.</div>
+            <div class="testi-role">Restaurant Owner, Harare</div>
+            <div class="testi-result-badge">250K views on first viral video</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PRICING ────────────────────────────────────── -->
+<section class="pricing-section">
+  <div class="pricing-inner">
+    <div class="pricing-top">
+      <div class="reveal-l">
+        <p class="sec-tag">Pricing</p>
+        <h2 class="sec-title">Simple, <em>honest</em> rates</h2>
+      </div>
+      <p class="pricing-note reveal-r">No hidden fees. No lock-in contracts. Just clear pricing for real results. Need something custom? We'll build a package around your exact needs.</p>
+    </div>
+    <div class="pricing-cards">
+      <div class="pkg-card reveal">
+        <div class="pkg-badge">Starter</div>
+        <div class="pkg-name">Starter</div>
+        <div class="pkg-price">$49<span style="font-size:16px;font-weight:400;color:var(--mid);"> / mo</span></div>
+        <div class="pkg-divider"></div>
+        <div class="pkg-feature has"><i class="fa fa-check"></i> 1 platform managed</div>
+        <div class="pkg-feature has"><i class="fa fa-check"></i> 12 posts per month</div>
+        <div class="pkg-feature has"><i class="fa fa-check"></i> 500 follower boost</div>
+        <div class="pkg-feature has"><i class="fa fa-check"></i> Monthly report</div>
+        <div class="pkg-feature"><i class="fa fa-times"></i> Paid ads campaign</div>
+        <div class="pkg-feature"><i class="fa fa-times"></i> Community management</div>
+        <div class="pkg-feature"><i class="fa fa-times"></i> Dedicated manager</div>
+        <a href="contact.html" class="pkg-btn pkg-btn-outline">Get started</a>
+      </div>
+
+      <div class="pkg-card featured reveal">
+        <div class="pkg-badge">Most popular</div>
+        <div class="pkg-name" style="color:#fff;">Growth</div>
+        <div class="pkg-price">$120<span style="font-size:16px;font-weight:400;color:rgba(255,255,255,0.4);"> / mo</span></div>
+        <div class="pkg-divider"></div>
+        <div class="pkg-feature has" style="color:rgba(255,255,255,0.85);"><i class="fa fa-check"></i> 3 platforms managed</div>
+        <div class="pkg-feature has" style="color:rgba(255,255,255,0.85);"><i class="fa fa-check"></i> 30 posts per month</div>
+        <div class="pkg-feature has" style="color:rgba(255,255,255,0.85);"><i class="fa fa-check"></i> 2,000+ follower boost</div>
+        <div class="pkg-feature has" style="color:rgba(255,255,255,0.85);"><i class="fa fa-check"></i> Monthly report</div>
+        <div class="pkg-feature has" style="color:rgba(255,255,255,0.85);"><i class="fa fa-check"></i> Paid ads campaign</div>
+        <div class="pkg-feature has" style="color:rgba(255,255,255,0.85);"><i class="fa fa-check"></i> Community management</div>
+        <div class="pkg-feature" style="color:rgba(255,255,255,0.3);"><i class="fa fa-times" style="color:rgba(255,255,255,0.2);"></i> Dedicated manager</div>
+        <a href="contact.html" class="pkg-btn pkg-btn-filled">Book now</a>
+      </div>
+
+      <div class="pkg-card reveal">
+        <div class="pkg-badge">Enterprise</div>
+        <div class="pkg-name">Authority</div>
+        <div class="pkg-price" style="font-size:28px;">Custom</div>
+        <div class="pkg-divider"></div>
+        <div class="pkg-feature has"><i class="fa fa-check"></i> All platforms managed</div>
+        <div class="pkg-feature has"><i class="fa fa-check"></i> Unlimited posts</div>
+        <div class="pkg-feature has"><i class="fa fa-check"></i> Maximum follower growth</div>
+        <div class="pkg-feature has"><i class="fa fa-check"></i> Monthly report</div>
+        <div class="pkg-feature has"><i class="fa fa-check"></i> Paid ads campaign</div>
+        <div class="pkg-feature has"><i class="fa fa-check"></i> Community management</div>
+        <div class="pkg-feature has"><i class="fa fa-check"></i> Dedicated manager</div>
+        <a href="contact.html" class="pkg-btn pkg-btn-outline">Contact us</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CTA ───────────────────────────────────────── -->
+<section class="cta-section">
+  <div class="cta-glow"></div>
+  <div class="cta-inner">
+    <div class="cta-left reveal-l">
+      <p class="sec-tag">Ready to grow?</p>
+      <h2 class="sec-title sec-title-light">Your social media<br>should work <em>for you.</em></h2>
+      <p class="cta-sub">Reach out today. We respond fast — often within the hour. Let's build something great together.</p>
+      <a href="contact.html" class="btn-primary">Book a consultation <i class="fa fa-arrow-right"></i></a>
+    </div>
+    <div class="cta-right reveal-r">
+      <a href="tel:+263779405017" class="contact-row">
+        <div class="cr-icon"><i class="fa fa-phone"></i></div>
+        <div><div class="cr-main">+263 77 940 5017</div><div class="cr-sub">Call us anytime</div></div>
+      </a>
+      <a href="/cdn-cgi/l/email-protection#93fef2e7fae9f2e4f2eafdf6d3f4fef2faffbdf0fcfe" class="contact-row">
+        <div class="cr-icon"><i class="fa fa-envelope"></i></div>
+        <div><div class="cr-main"><span class="__cf_email__" data-cfemail="422f23362b382335233b2c2702252f232b2e6c212d2f">[email&#160;protected]</span></div><div class="cr-sub">Email us directly</div></div>
+      </a>
+      <a href="https://wa.me/263779405017" class="contact-row">
+        <div class="cr-icon"><i class="fab fa-whatsapp" style="color:#25d366;font-size:20px;"></i></div>
+        <div><div class="cr-main">WhatsApp us now</div><div class="cr-sub">Fastest response guaranteed</div></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─────────────────────────────────────── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-logo">Miles<span>Tech</span></div>
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="services.html">Services</a>
+        <a href="social-management.html">Social Media</a>
+        <a href="projects.html">Projects</a>
+        <a href="contact.html">Contact</a>
+        <a href="tel:+263779405017">+263 77 940 5017</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">©2026 Miles Tech. All rights reserved.</span>
+      <span class="footer-loc"><i class="fa fa-map-marker-alt"></i> Harare, Zimbabwe</span>
+    </div>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ── Menu
+function toggleMenu(){
+  const panel = document.getElementById('mobPanel');
+  const overlay = document.getElementById('mobOverlay');
+  const btn = document.getElementById('hamBtn');
+  const isOpen = panel.classList.contains('open');
+  if(isOpen){
+    panel.classList.remove('open');
+    overlay.classList.remove('open');
+    btn.classList.remove('is-open');
+    document.body.style.overflow = '';
+  } else {
+    panel.classList.add('open');
+    overlay.classList.add('open');
+    btn.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+}
+function closeMenu(){
+  document.getElementById('mobPanel').classList.remove('open');
+  document.getElementById('mobOverlay').classList.remove('open');
+  document.getElementById('hamBtn').classList.remove('is-open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeMenu(); });
+
+// ── Reveal on scroll
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
